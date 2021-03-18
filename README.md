@@ -17,7 +17,7 @@ Naš proizvod zainteresovanim stranama nudi:
  - Podršku pri kreiranju modela zahteva
  - Podršku pri kreiranju funkcionalnog modela
  - Podršku pri kreiranju klasnog modela
- - Podršku pri konverziji:
+ - Podršku pri transformaciji:
     - Modela zahteva u funkcionalni model
     - Klasnog modela u java kod
  - Kontrola verzija (VCS)
