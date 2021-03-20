@@ -6,7 +6,7 @@
 
 ## 2. Kome je ovaj proizvod namenjen?
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ovaj proizvod je namenjen softverskim inženjerima. Alat je moguće koristiti individualno ili u projektnim timovima, pri čemu se timovi sastoje od registrovanih korisnika. Takođe, nudi mogućnost međusobne komunikacije između članova tima. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ovaj proizvod je namenjen softverskim inženjerima. Alat je moguće koristiti individualno ili u projektnim timovima, pri čemu se timovi sastoje od registrovanih korisnika. Takođe, nudi mogućnost međusobne saradnje između članova tima. 
 
 ## 3. Zašto baš ovaj proizvod?
 
@@ -21,6 +21,6 @@ Naš proizvod zainteresovanim stranama nudi:
     - Modela zahteva u funkcionalni model
     - Klasnog modela u java kod
  - Kontrola verzija (VCS)
- - Rad u timovima i komunikaciju između članova
+ - Rad u timovima i saradnja između članova
  - Intuitivan korisnički interfejs
  - Otpornost na greške
