@@ -1,0 +1,33 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "Auth service is a microservice whose role is to to ensure who the user is authenticated and authorization.",
+  "main": "index.js",
+  "scripts": {
+    "web": "forever src/index.js",
+    "watch": "nodemon src/index.js"
+  },
+  "author": "Riphal <bjankovic998@gmail.com>",
+  "license": "MIT",
+  "_moduleAliases": {
+    "@config": "./config",
+    "@app": "./src",
+    "@api": "./src/api",
+    "@common": "./src/common"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.10.0",
+    "forever": "^3.0.4",
+    "knex": "^0.95.3",
+    "module-alias": "^2.2.2",
+    "winston": "^3.3.3"
+  }
+}
