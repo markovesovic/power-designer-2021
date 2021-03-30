@@ -6,7 +6,7 @@ require('dotenv').config({
 });
 
 const knexConfig = {
-	client: 'pg',
+	client: 'mysql',
 	connection: process.env.DATABASE_URL,
 	migrations: {
 		directory: '../src/common/db/migrations'
@@ -16,11 +16,5 @@ const knexConfig = {
 module.exports = {
 	production: knexConfig,
 	staging: knexConfig,
-	development: knexConfig,
-	onUpdateTrigger: table => `
-		CREATE TRIGGER ${table}_updated_at
-		BEFORE UPDATE ON ${table}
-		FOR EACH ROW
-		EXECUTE PROCEDURE on_update_timestamp();
-	`
+	development: knexConfig
 };
