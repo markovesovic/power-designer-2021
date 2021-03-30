@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "web": "forever src/index.js",
-    "watch": "nodemon src/index.js"
+    "watch": "nodemon src/index.js",
+    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js"
   },
   "author": "Riphal <bjankovic998@gmail.com>",
   "license": "MIT",
