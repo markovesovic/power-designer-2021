@@ -1,10 +1,11 @@
 const router = require('express').Router({ mergeParams: true });
 
 const auth = require('@api/auth');
+const val = require('@api/validators');
 const Response = require('@api/utils/response');
 const { userService } = require('@common/services');
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', val.user.register, async (req, res, next) => {
 	try {
 		const token = await userService.register(req.body);
 
@@ -17,7 +18,7 @@ router.post('/register', async (req, res, next) => {
 	}
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', val.user.login, async (req, res, next) => {
 	try {
 		const { email, password } = req.body;
 
@@ -32,7 +33,7 @@ router.post('/login', async (req, res, next) => {
 	}
 });
 
-router.post('/logout', async (req, res, next) => {
+router.post('/logout', auth.isAuth, async (req, res, next) => {
 	try {
 		await auth.blacklistToken(req);
 
