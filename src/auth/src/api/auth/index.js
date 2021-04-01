@@ -3,16 +3,27 @@ const passport = require('passport');
 require('@config/passport')(passport);
 
 const config = require('@config/index');
+const registry = require('@common/registry');
 const { AuthenticationError } = require('@common/errors');
 
 module.exports = {
 	isAuth,
-	getToken,
-	generateToken
+	generateToken,
+	blacklistToken
 };
 
-function isAuth (req, res, next) {
+async function isAuth (req, res, next) {
 	try {
+		const token = getToken(req.headers);
+
+		const blacklisted = await registry.IsBlacklisted(token);
+
+		if (blacklisted) {
+			next(new AuthenticationError());
+
+			return;
+		}
+
 		const authorization = passport.authenticate('jwt', { session: false });
 
 		return authorization(req, res, next);
@@ -44,4 +55,10 @@ function generateToken (payload) {
 	);
 
 	return token;
+}
+
+function blacklistToken (req) {
+	const token = getToken(req.headers);
+
+	return registry.blacklistToken(token);
 }

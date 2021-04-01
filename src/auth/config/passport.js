@@ -2,9 +2,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const config = require('@config/index');
-const { userService } = require('@common/services');
-
-// load up the user model
+const db = require('@common/db');
 
 module.exports = (passport) => {
 	const opts = {
@@ -14,11 +12,13 @@ module.exports = (passport) => {
 
 	passport.use('jwt', new JwtStrategy(opts, async (jwtPayload, done) => {
 		try {
-			const user = await userService.getUser(jwtPayload.id);
+			const user = await db('users')
+				.select('*')
+				.where({ id: jwtPayload.id });
 
 			return done(null, {
-				id: user.id,
-				email: user.email
+				id: user[0].id,
+				email: user[0].email
 			});
 		} catch (err) {
 			return done(err, false);
