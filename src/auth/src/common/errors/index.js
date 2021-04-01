@@ -41,10 +41,24 @@ class NotFoundError extends Error {
 	}
 }
 
+class UserNotFoundError extends Error {
+	constructor() {
+		super();
+		this.name = 'UserNotFoundError';
+	}
+}
+
 class ConflictError extends Error {
 	constructor() {
 		super();
 		this.name = 'ConflictError';
+	}
+}
+
+class RegisterEmailConflict extends Error {
+	constructor() {
+		super();
+		this.name = 'RegisterEmailConflict';
 	}
 }
 
@@ -53,5 +67,7 @@ module.exports = {
 	AuthorizationError,
 	ValidationError,
 	NotFoundError,
-	ConflictError
+	UserNotFoundError,
+	ConflictError,
+	RegisterEmailConflict
 };

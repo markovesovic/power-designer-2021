@@ -22,8 +22,14 @@ function error (err, req, res, next) {
 	else if (err instanceof errors.NotFoundError || err.name === 'NotFoundError') {
 		res.status(404).json(Response.error(404, 'Not found', err.name));
 	}
+	else if (err instanceof errors.UserNotFoundError || err.name === 'UserNotFoundError') {
+		res.status(404).json(Response.error(404, 'User with this email doesn\'t exist', err.name));
+	}
 	else if (err instanceof errors.ConflictError || err.name === 'ConflictError') {
 		res.status(409).json(Response.error(409, 'Conflict', err.name));
+	}
+	else if (err instanceof errors.RegisterEmailConflict || err.name === 'RegisterEmailConflict') {
+		res.status(409).json(Response.error(409, 'User with this email already exists', err.name));
 	}
 	else {
 		next(err);

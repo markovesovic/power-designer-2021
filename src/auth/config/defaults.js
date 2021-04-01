@@ -1,4 +1,5 @@
 module.exports = {
 	NODE_ENV: 'development',
-	DATABASE_URL: 'mysql://root:password@127.0.0.1:3306/db',
+	DATABASE_URL: 'mysql://root:password@localhost:3306/auth',
+	JWT_SECRET: 'secret'
 };
