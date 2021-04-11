@@ -25,8 +25,11 @@ public class RqmController {
 
     @PostMapping("/rqm")
     public CreateRqmResponse addRqm(@RequestBody RqmResponse rqm) {
-        UUID uuid = UUID.randomUUID();
-        rqm.setId(uuid.toString());
+        if (rqm.getId() == null) {
+            UUID uuid = UUID.randomUUID();
+            rqm.setId(uuid.toString());
+        }
+
         repository.save(rqm);
         CreateRqmResponse createRqmResponse = new CreateRqmResponse();
         createRqmResponse.setId(rqm.getId());
