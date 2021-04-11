@@ -22,6 +22,9 @@ function error (err, req, res, next) {
 	else if (err instanceof errors.NotFoundError || err.name === 'NotFoundError') {
 		res.status(404).json(Response.error(404, 'Not found', err.name));
 	}
+	else if (err instanceof errors.ProjectNotFoundError || err.name === 'ProjectNotFoundError') {
+		res.status(404).json(Response.error(404, 'Project not found', err.name));
+	}
 	else if (err instanceof errors.UserNotFoundError || err.name === 'UserNotFoundError') {
 		res.status(404).json(Response.error(404, 'User with this email doesn\'t exist', err.name));
 	}
