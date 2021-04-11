@@ -7,7 +7,7 @@ exports.up = function (knex) {
 
 		table.uuid('model_id').primary().defaultTo(knex.raw('(UUID())'));
 
-        table.string('model_type').notNullable();
+		table.string('model_type').notNullable();
 	});
 };
 
