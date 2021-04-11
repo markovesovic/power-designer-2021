@@ -10,20 +10,19 @@ const { RQM_SERVICE_URL } = require('../../../../../config');
  */
 router.post('/', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		const res = await got.post(`${RQM_SERVICE_URL}/rqm`, {
+		const rqmRes = await got.post(`${RQM_SERVICE_URL}/rqm`, {
 			headers: {
-				'Content-Type': 'application/json'
+				'content-type': 'application/json'
 			},
 			body: JSON.stringify(req.body)
 		});
 
-		const model = await projectService.createModel(JSON.parse(res.body).id, req.params.project_id, req.body.model_type);
+		if (!req.body.id) {
+			await projectService.createModel(JSON.parse(rqmRes.body).id, req.params.project_id, req.body.model_type);
+		}
 
 		res.status(200)
-			.json(Response.success({
-				model,
-			}))
-			.end();
+			.end(rqmRes.body);
 	} catch (err) {
 		next(err);
 	}
@@ -31,22 +30,10 @@ router.post('/', projectService.checkProjectsByUser, async (req, res, next) => {
 
 router.get('/:model_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		const res = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+		const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 
 		res.status(200)
-			.end(res.body);
-	} catch (err) {
-		next(err);
-	}
-});
-
-router.patch('/:model_id', async (req, res, next) => {
-	try {
-		// TO-DO: Implement
-
-		res.status(200)
-			.json(Response.success())
-			.end();
+			.end(rqmRes.body);
 	} catch (err) {
 		next(err);
 	}

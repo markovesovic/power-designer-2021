@@ -78,6 +78,13 @@ router.use(auth.isAuth, async (req, res, next) => {
 		}
 
 		const headers = JSON.parse(JSON.stringify(req.headers));
+		headers.user_id = req.user_id;
+
+		if (req.method !== 'GET') {
+			headers['content-type'] = 'application/json';
+			headers['content-length'] = '' + JSON.stringify(req.body).length;
+		}
+
 		delete headers.host;
 
 		let promise;

@@ -32,14 +32,14 @@ async function getProjectsByUserID (userID) {
 	return projects;
 }
 
-async function createProject (project) {
+async function createProject (userID, teamID) {
 	const id = uuidv4();
 
 	await db('projects')
 		.insert({
 			id,
-			team_id: project.team_id,
-			user_id: project.user_id,
+			user_id: userID,
+			team_id: teamID || null
 		});
 
 	return { id };
@@ -93,13 +93,13 @@ async function deleteModel (modelID) {
 
 async function checkProjectsByUser (req, res, next) {
 	const userID = req.headers.user_id;
-	const projectID = req.params.id;
+	const projectID = req.params.project_id;
 
-	const user_id = db('projects')
+	const project = await db('projects')
 		.select('user_id')
-		.where({id: projectID});
+		.where({ id: projectID });
 
-	if(user_id === userID) {
+	if (project[0] && project[0].user_id === userID) {
 		next();
 	} else {
 		res.status(400).send({

@@ -10,23 +10,24 @@ const { RQM_SERVICE_URL } = require('../../../../config');
  */
 
 router.get('/', async (req, res, next) => {
-	res.send(200);
 	try {
 		const userID = req.headers.user_id;
 		const teamID = req.headers.team_id;
-		if(teamID == null) {
+
+		if (!teamID) {
 			const projects = projectService.getProjectsByUserID(userID);
 
 			res.status(200)
 				.json(Response.success({
-					projects,
+					projects
 				}))
 				.end();
 		} else {
 			const projects = projectService.getProjectsByTeamID(teamID);
+
 			res.status(200)
 				.json(Response.success({
-					projects: projects,
+					projects
 				}))
 				.end();
 		}
@@ -38,8 +39,10 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		const project = projectService.getProjectByID(req.params.project_id);
-		const modelIDs = projectService.getAllModelsByProjectID(req.params.project_id);
+		const [ project, modelIDs ] = await Promise.all([
+			projectService.getProjectByID(req.params.project_id),
+			projectService.getAllModelsByProjectID(req.params.project_id)
+		]);
 
 		const promises = modelIDs.map(async model => {
 			const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
@@ -63,12 +66,11 @@ router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, 
 
 router.post('/', async (req, res, next) => {
 	try {
-		let project = await projectService.createProject(req.body);
-		project = await projectService.getProjectByID(project.id);
+		const project = await projectService.createProject(req.headers.user_id, req.headers.team_id);
 
 		res.status(200)
 			.json(Response.success({
-				project,
+				project
 			}))
 			.end();
 	} catch (err) {
@@ -78,9 +80,9 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		await projectService.deleteProjectById(req.params.project_id);
+		await projectService.deleteProjectByID(req.params.project_id);
 
-		const modelIDs = projectService.getAllModelsByProjectID(req.params.project_id);
+		const modelIDs = await projectService.getAllModelsByProjectID(req.params.project_id);
 		const promises = modelIDs.map(async model => {
 			await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 		});
