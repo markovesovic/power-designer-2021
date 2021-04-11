@@ -6,7 +6,9 @@ const { RQM_SERVICE_URL } = require('../../../../config');
 /**
  * Projects
  */
+
 router.get('/', async (req, res, next) => {
+   res.send(200);
    try {
       const userID = req.headers.user_id;
       const teamID = req.headers.team_id;
@@ -68,7 +70,7 @@ router.delete('/:project_id', projectService.checkProjectsByUser, async (req, re
       promises.push(promise);
       const ids = projectService.getAllModelsByProjectID(req.params.project_id);
       ids.foreach(id => {
-         const p = await axios.delete(`${RQM_SERVICE_URL}/rqm/${id}`, );
+         const p = axios.delete(`${RQM_SERVICE_URL}/rqm/${id}`, );
          promises.push(p);
       });
       Promise.all(promises);

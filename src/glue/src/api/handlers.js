@@ -1,6 +1,6 @@
-const Response = require('@api/utils/response');
-const errors = require('@common/errors');
-const logger = require('@common/logger');
+const Response = require('../api/utils/response');
+const errors = require('../common/errors');
+const logger = require('../common/logger');
 
 module.exports = {
 	error,
