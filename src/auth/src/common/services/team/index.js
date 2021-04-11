@@ -12,6 +12,7 @@ module.exports = {
 	getTeam,
 	deleteTeam,
 	addTeamMember,
+	getTeamMember,
 	updateTeamMemberRole,
 	deleteTeamMember
 };
@@ -76,6 +77,10 @@ async function addTeamMember (userID, teamID, targetID, roleID) {
 	}
 
 	return query.addTeamMember(teamID, targetID, roleID);
+}
+
+function getTeamMember (userID, teamID) {
+	return query.getTeamMember(userID, teamID);
 }
 
 async function updateTeamMemberRole (userID, teamID, targetID, roleID) {

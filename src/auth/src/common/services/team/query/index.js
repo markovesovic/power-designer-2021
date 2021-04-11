@@ -7,6 +7,7 @@ module.exports = {
 	getTeam,
 	getTeamByName,
 	deleteTeam,
+	getTeamMember,
 	getTeamMembers,
 	getTeamMembersDetails,
 	addTeamMember,
@@ -47,6 +48,17 @@ async function deleteTeam (teamID) {
 	await db('teams')
 		.where({ id: teamID })
 		.del();
+}
+
+async function getTeamMember (userID, teamID) {
+	const member = await db('members')
+		.select('*')
+		.where({
+			user_id: userID,
+			team_id: teamID
+		});
+
+	return member[0];
 }
 
 async function getTeamMembers (teamID) {
