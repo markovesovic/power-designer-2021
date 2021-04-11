@@ -73,7 +73,7 @@ async function getAllModelsByProjectID (projectID) {
 
 async function createModel (modelID, projectID, modelType) {
    await db('models').insert({
-      id: modelID,
+      model_id: modelID,
       project_id: projectID,
       model_type: modelType,
    });

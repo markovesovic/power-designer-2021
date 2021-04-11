@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
             projects: projects,
          });
       } else {
-         const projects = projectService.getProjectsByTeamAndUserID(teamID, userID);
+         const projects = projectService.getProjectsByTeamID(teamID);
          res.status(200).send({
             projects: projects,
          });
