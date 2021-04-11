@@ -6,7 +6,8 @@ exports.up = function (knex) {
 		table.uuid('project_id').notNullable();
 		table.foreign('project_id').references('id').inTable('projects').onDelete('CASCADE');
 
-		table.uuid('model_id').notNullable();
+		table.uuid('model_id').primary().defaultTo(knex.raw('(UUID())'));
+
       table.string('model_type').notNullable();
 	});
 };
