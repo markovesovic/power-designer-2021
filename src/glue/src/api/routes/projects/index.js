@@ -2,7 +2,6 @@ const router = require('express').Router({ mergeParams: true });
 const got = require('got');
 
 const Response = require('../../utils/response');
-const { ProjectNotFoundError } = require('../../../common/errors');
 const { projectService } = require('../../../common/services');
 const { RQM_SERVICE_URL } = require('../../../../config');
 
@@ -42,8 +41,8 @@ router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, 
 		const project = projectService.getProjectByID(req.params.project_id);
 		const modelIDs = projectService.getAllModelsByProjectID(req.params.project_id);
 
-		const promises = modelIDs.map(async modelID => {
-			const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${modelID}`);
+		const promises = modelIDs.map(async model => {
+			const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 
 			return JSON.parse(rqmRes.body);
 		});
@@ -64,11 +63,12 @@ router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, 
 
 router.post('/', async (req, res, next) => {
 	try {
-		const project = await projectService.createProject(req.body);
+		let project = await projectService.createProject(req.body);
+		project = await projectService.getProjectByID(project.id);
 
 		res.status(200)
 			.json(Response.success({
-				project: project,
+				project,
 			}))
 			.end();
 	} catch (err) {
@@ -80,9 +80,9 @@ router.delete('/:project_id', projectService.checkProjectsByUser, async (req, re
 	try {
 		await projectService.deleteProjectById(req.params.project_id);
 
-		const ids = projectService.getAllModelsByProjectID(req.params.project_id);
-		const promises = ids.map(async id => {
-			await got.delete(`${RQM_SERVICE_URL}/rqm/${id}`);
+		const modelIDs = projectService.getAllModelsByProjectID(req.params.project_id);
+		const promises = modelIDs.map(async model => {
+			await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 		});
 
 		await Promise.all(promises);
@@ -97,18 +97,14 @@ router.delete('/:project_id', projectService.checkProjectsByUser, async (req, re
 
 router.patch('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		const count = await projectService.updateProjectByID({
-			id: req.params.project_id,
-			changes: req.body,
-		});
+		await projectService.updateProjectByID(req.params.project_id, req.body);
+		const project = await projectService.getProjectByID(req.params.project_id);
 
-		if(count) {
-			res.status(200)
-				.json(Response.success())
-				.end();
-		} else {
-			throw new ProjectNotFoundError();
-		}
+		res.status(200)
+			.json(Response.success({
+				project
+			}))
+			.end();
 	} catch (err) {
 		next(err);
 	}

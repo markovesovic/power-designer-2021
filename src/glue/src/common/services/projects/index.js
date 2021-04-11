@@ -1,9 +1,11 @@
+const { v4: uuidv4 } = require('uuid');
+
+const { ProjectNotFoundError } = require('../../errors');
 const db = require('../../db');
 
 module.exports = {
 	getProjectsByTeamID,
 	getProjectsByUserID,
-	getProjectsByTeamAndUserID,
 	getProjectByID,
 	createProject,
 	deleteProjectByID,
@@ -30,44 +32,48 @@ async function getProjectsByUserID (userID) {
 	return projects;
 }
 
-async function getProjectsByTeamAndUserID (teamID, userID) {
-	const projects = await db('projects')
-		.select('id')
-		.where({ team_id: teamID, user_id: userID });
-	return projects;
-}
-
 async function createProject (project) {
-	const insertedProject = await db('projects')
+	const id = uuidv4();
+
+	await db('projects')
 		.insert({
+			id,
 			team_id: project.team_id,
 			user_id: project.user_id,
 		});
-	return insertedProject;
+
+	return { id };
 }
 
 async function getProjectByID (id) {
 	const project = await db('projects')
 		.select('*')
-		.where({ id: id });
-	return project;
+		.where({ id });
+
+	if (!project[0]) {
+		throw new ProjectNotFoundError();
+	}
+
+	return project[0];
 }
 
 async function deleteProjectByID (projectID) {
-	await db('projects').del().where( { id: projectID } );
+	await db('projects')
+		.where({ id: projectID })
+		.del();
 }
 
-async function updateProjectByID (project) {
-	const id = project.id;
-	const changes = project.changes;
-	await db('projects').where({ id: id }).update(changes);
+async function updateProjectByID (id, changes) {
+	await db('projects')
+		.where({ id: id })
+		.update(changes);
 }
 
 async function getAllModelsByProjectID (projectID) {
-
 	const IDs = await db('models')
-		.select('model_id')
+		.select('model_id AS id')
 		.where({ project_id: projectID });
+
 	return IDs;
 }
 
@@ -80,8 +86,9 @@ async function createModel (modelID, projectID, modelType) {
 }
 
 async function deleteModel (modelID) {
-	await db('models').del().where({ model_id: modelID });
-
+	await db('models')
+		.where({ model_id: modelID })
+		.del();
 }
 
 async function checkProjectsByUser (req, res, next) {
@@ -95,7 +102,7 @@ async function checkProjectsByUser (req, res, next) {
 	if(user_id === userID) {
 		next();
 	} else {
-		res.send({
+		res.status(400).send({
 			message: 'User doesn\'t have access to given project',
 		});
 	}
