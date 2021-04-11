@@ -46,8 +46,6 @@ async function createUser (user) {
 async function register (user) {
 	const exist = await getUserByEmail(user.email);
 
-	console.log(exist);
-
 	if (!exist) {
 		await createUser(user);
 

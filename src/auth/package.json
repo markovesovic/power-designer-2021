@@ -6,7 +6,7 @@
   "scripts": {
     "web": "forever src/index.js",
     "watch": "nodemon src/index.js",
-    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js"
+    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js && knex seed:run --knexfile ./config/knexfile.js"
   },
   "author": "Riphal <bjankovic998@gmail.com>",
   "license": "MIT",
@@ -34,6 +34,7 @@
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "uuid": "^8.3.2",
     "winston": "^3.3.3"
   }
 }

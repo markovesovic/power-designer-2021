@@ -48,6 +48,20 @@ class UserNotFoundError extends Error {
 	}
 }
 
+class TeamNotFoundError extends Error {
+	constructor() {
+		super();
+		this.name = 'TeamNotFoundError';
+	}
+}
+
+class TeamMemberNotFoundError extends Error {
+	constructor() {
+		super();
+		this.name = 'TeamMemberNotFoundError';
+	}
+}
+
 class ConflictError extends Error {
 	constructor() {
 		super();
@@ -62,12 +76,22 @@ class RegisterEmailConflict extends Error {
 	}
 }
 
+class CreateTeamConflict extends Error {
+	constructor() {
+		super();
+		this.name = 'CreateTeamConflict';
+	}
+}
+
 module.exports = {
 	AuthenticationError,
 	AuthorizationError,
 	ValidationError,
 	NotFoundError,
 	UserNotFoundError,
+	TeamNotFoundError,
+	TeamMemberNotFoundError,
 	ConflictError,
-	RegisterEmailConflict
+	RegisterEmailConflict,
+	CreateTeamConflict
 };

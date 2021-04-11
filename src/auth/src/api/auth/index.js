@@ -8,6 +8,8 @@ const { AuthenticationError } = require('@common/errors');
 
 module.exports = {
 	isAuth,
+	getToken,
+	getJWTPeyload,
 	generateToken,
 	blacklistToken
 };
@@ -39,6 +41,16 @@ function getToken (headers) {
 		if (parted.length === 2) {
 			return parted[1];
 		}
+	}
+}
+
+function getJWTPeyload (token) {
+	try {
+		const decoded = jwt.verify(token, config.getEnv('JWT_SECRET'));
+
+		return decoded;
+	} catch (err) {
+		throw new AuthenticationError();
 	}
 }
 

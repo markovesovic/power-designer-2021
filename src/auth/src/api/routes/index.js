@@ -45,4 +45,20 @@ router.post('/logout', auth.isAuth, async (req, res, next) => {
 	}
 });
 
+router.use((req, res, next) => {
+	try {
+		const token = auth.getToken(req.headers);
+		const payload = auth.getJWTPeyload(token);
+
+		req.user_id = payload.id;
+		req.email = payload.email;
+
+		next();
+	} catch (err) {
+		next(err);
+	}
+});
+
+router.use('/teams', auth.isAuth, require('./teams'));
+
 module.exports = router;

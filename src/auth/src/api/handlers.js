@@ -25,11 +25,20 @@ function error (err, req, res, next) {
 	else if (err instanceof errors.UserNotFoundError || err.name === 'UserNotFoundError') {
 		res.status(404).json(Response.error(404, 'User with this email doesn\'t exist', err.name));
 	}
+	else if (err instanceof errors.TeamNotFoundError || err.name === 'TeamNotFoundError') {
+		res.status(404).json(Response.error(404, 'Team with this id doesn\'t exist', err.name));
+	}
+	else if (err instanceof errors.TeamMemberNotFoundError || err.name === 'TeamMemberNotFoundError') {
+		res.status(404).json(Response.error(404, 'Team member with this id doesn\'t exist', err.name));
+	}
 	else if (err instanceof errors.ConflictError || err.name === 'ConflictError') {
 		res.status(409).json(Response.error(409, 'Conflict', err.name));
 	}
 	else if (err instanceof errors.RegisterEmailConflict || err.name === 'RegisterEmailConflict') {
 		res.status(409).json(Response.error(409, 'User with this email already exists', err.name));
+	}
+	else if (err instanceof errors.CreateTeamConflict || err.name === 'CreateTeamConflict') {
+		res.status(409).json(Response.error(409, 'Team with this name already exists', err.name));
 	}
 	else {
 		next(err);
