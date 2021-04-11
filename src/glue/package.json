@@ -4,7 +4,8 @@
   "description": "Is a microservice whose role is to connect other microservices and provide one api.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "nodemon run index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "express": "^4.17.1",
     "knex": "^0.95.4",
     "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
     "winston": "^3.3.3"
   }
 }
