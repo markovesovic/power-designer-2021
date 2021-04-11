@@ -1,5 +1,8 @@
 const router = require('express').Router({ mergeParams: true });
 
+const { projectService } = require('../../../common/services');
+const { RQM_SERVICE_URL } = require('../../../../config');
+
 /**
  * Models
  */
