@@ -1,5 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
+const got = require('got');
 
+const Response = require('../../utils/response');
 const { projectService } = require('../../../common/services');
 const { RQM_SERVICE_URL } = require('../../../../config');
 
@@ -8,97 +10,107 @@ const { RQM_SERVICE_URL } = require('../../../../config');
  */
 
 router.get('/', async (req, res, next) => {
-   res.send(200);
-   try {
-      const userID = req.headers.user_id;
-      const teamID = req.headers.team_id;
-      if(team_id == null) {
-         const projects = projectService.getProjectsByUserID(userID);
-         res.status(200).send({
-            projects: projects,
-         });
-      } else {
-         const projects = projectService.getProjectsByTeamID(teamID);
-         res.status(200).send({
-            projects: projects,
-         });
-      }
+	try {
+		const userID = req.headers.user_id;
+		const teamID = req.headers.team_id;
 
-   } catch (err) {
-      next(err);
-   }
+		if (!teamID) {
+			const projects = projectService.getProjectsByUserID(userID);
+
+			res.status(200)
+				.json(Response.success({
+					projects
+				}))
+				.end();
+		} else {
+			const projects = projectService.getProjectsByTeamID(teamID);
+
+			res.status(200)
+				.json(Response.success({
+					projects
+				}))
+				.end();
+		}
+
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
-   try {
-      const project = projectService.getProjectByID(req.params.project_id);
-      const modelIDs = projectService.getAllModelsByProjectID(req.params.project_id);
+	try {
+		const [ project, modelIDs ] = await Promise.all([
+			projectService.getProjectByID(req.params.project_id),
+			projectService.getAllModelsByProjectID(req.params.project_id)
+		]);
 
-      let promises = [];
-      modelIDs.foreach(modelID => {
-         const promise = axios.get(`${RQM_SERVICE_URL}/rqm/${modelID}`, );
-         promises.push(promise);
-      });
-      const models = Promise.all(promises);
+		const promises = modelIDs.map(async model => {
+			const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 
-      res.send({
-         project: project,
-         models: models,
-      });
+			return JSON.parse(rqmRes.body);
+		});
 
-   } catch (err) {
-      next(err);
-   }
+		const models = await Promise.all(promises);
+
+		res.status(200)
+			.json(Response.success({
+				project: project,
+				models: models,
+			}))
+			.end();
+
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.post('/', async (req, res, next) => {
-   try {
-      const project = await projectService.createProject(req.body);
+	try {
+		const project = await projectService.createProject(req.headers.user_id, req.headers.team_id);
 
-      res.send({
-         project: project,
-      });
-   } catch (err) {
-      next(err);
-   }
+		res.status(200)
+			.json(Response.success({
+				project
+			}))
+			.end();
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.delete('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
-   try {
-      let promises = [];
-      const promise = projectService.deleteProjectById(req.params.project_id);
-      promises.push(promise);
-      const ids = projectService.getAllModelsByProjectID(req.params.project_id);
-      ids.foreach(id => {
-         const p = axios.delete(`${RQM_SERVICE_URL}/rqm/${id}`, );
-         promises.push(p);
-      });
-      Promise.all(promises);
-      res.status(200);
+	try {
+		await projectService.deleteProjectByID(req.params.project_id);
 
-   } catch (err) {
-      next(err);
-   }
+		const modelIDs = await projectService.getAllModelsByProjectID(req.params.project_id);
+		const promises = modelIDs.map(async model => {
+			await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
+		});
+
+		await Promise.all(promises);
+
+		res.status(200)
+			.json(Response.success())
+			.end();
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.patch('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
-   try {
-      const count = await projectService.updateProjectByID({
-         id: req.params.project_id,
-         changes: req.body,
-      });
+	try {
+		await projectService.updateProjectByID(req.params.project_id, req.body);
+		const project = await projectService.getProjectByID(req.params.project_id);
 
-      if(count) {
-         res.send(200);
-      } else {
-         res.send({
-            message: 'Project not found',
-         });
-      }
-   } catch (err) {
-      next(err);
-   }
-}); 
+		res.status(200)
+			.json(Response.success({
+				project
+			}))
+			.end();
+	} catch (err) {
+		next(err);
+	}
+});
 
 router.use('/:project_id/models', require('./models'));
 

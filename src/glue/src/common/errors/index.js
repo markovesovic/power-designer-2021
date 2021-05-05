@@ -48,6 +48,13 @@ class UserNotFoundError extends Error {
 	}
 }
 
+class ProjectNotFoundError extends Error {
+	constructor() {
+		super();
+		this.name = 'ProjectNotFoundError';
+	}
+}
+
 class ConflictError extends Error {
 	constructor() {
 		super();
@@ -68,6 +75,7 @@ module.exports = {
 	ValidationError,
 	NotFoundError,
 	UserNotFoundError,
+	ProjectNotFoundError,
 	ConflictError,
 	RegisterEmailConflict
 };
