@@ -71,7 +71,7 @@ async function updateProjectByID (id, changes) {
 
 async function getAllModelsByProjectID (projectID) {
 	const IDs = await db('models')
-		.select('model_id AS id')
+		.select('model_id AS id, model_type AS type')
 		.where({ project_id: projectID });
 
 	return IDs;

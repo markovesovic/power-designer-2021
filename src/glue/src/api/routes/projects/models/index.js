@@ -2,15 +2,35 @@ const router = require('express').Router({ mergeParams: true });
 const got = require('got');
 
 const Response = require('../../../utils/response');
-const { projectService } = require('../../../../common/services');
-const { RQM_SERVICE_URL } = require('../../../../../config');
+
+const { projectService,
+		  modelValidationService } = require('../../../../common/services');
+
+const { RQM_SERVICE_URL,
+	 	  USE_CASE_SERVICE_URL,
+	  	  CLASS_MODEL_SERVICE_URL } = require('../../../../../config');
 
 /**
  * Models
  */
-router.post('/', projectService.checkProjectsByUser, async (req, res, next) => {
+router.post('/', projectService.checkProjectsByUser, modelValidationService.validateModel, async (req, res, next) => {
 	try {
-		const rqmRes = await got.post(`${RQM_SERVICE_URL}/rqm`, {
+
+		let modelService;
+		let modelServiceRoute;
+
+		if(req.body.model_type == 'rqm') {
+			modelService = RQM_SERVICE_URL;
+			modelServiceRoute = 'rqm';
+		} else if(req.body.model_type == 'use_case') {
+			modelService = USE_CASE_SERVICE_URL;
+			modelServiceRoute = 'use_case';
+		} else if(req.body.model_type == 'class_model') {
+			modelService = CLASS_MODEL_SERVICE_URL;
+			modelServiceRoute = 'class_model';
+		}
+
+		const rqmRes = await got.post(`${modelService}/${modelServiceRoute}`, {
 			headers: {
 				'content-type': 'application/json'
 			},
@@ -30,10 +50,19 @@ router.post('/', projectService.checkProjectsByUser, async (req, res, next) => {
 
 router.get('/:model_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+
+		let modelRes;
+		if(req.body.model_type == 'rqm') {
+			modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+		} else if(req.body.model_type == 'use_case') {
+			modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use_case/${req.params.model_id}`);
+		} else if(req.body.model_type == 'class_model') {
+			modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class_model/${req.params.model_id}`);
+		}
+		// const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 
 		res.status(200)
-			.end(rqmRes.body);
+			.end(modelRes.body);
 	} catch (err) {
 		next(err);
 	}
@@ -42,7 +71,16 @@ router.get('/:model_id', projectService.checkProjectsByUser, async (req, res, ne
 router.delete('/:model_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
 		await projectService.deleteModel(req.params.model_id);
-		await got.delete(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+
+		if(req.body.model_type == 'rqm') {
+			await got.delete(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+		} else if(req.body.model_type == 'use_case') {
+			await got.delete(`${USE_CASE_SERVICE_URL}/use_case/${req.params.model_id}`);
+		} else if(req.body.model_type == 'class_model') {
+			await got.delete(`${CLASS_MODEL_SERVICE_URL}/class_model/${req.params.model_id}`);
+		}
+
+		// await got.delete(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 
 		res.status(200)
 			.json(Response.success())

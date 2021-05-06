@@ -69,6 +69,13 @@ class RegisterEmailConflict extends Error {
 	}
 }
 
+class InvalidModelError extends Error {
+	constructor() {
+		super();
+		this.name = 'InvalidModelError';
+	}
+}
+
 module.exports = {
 	AuthenticationError,
 	AuthorizationError,
@@ -77,5 +84,6 @@ module.exports = {
 	UserNotFoundError,
 	ProjectNotFoundError,
 	ConflictError,
-	RegisterEmailConflict
+	RegisterEmailConflict,
+	InvalidModelError
 };

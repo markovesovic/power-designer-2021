@@ -3,7 +3,9 @@ const got = require('got');
 
 const Response = require('../../utils/response');
 const { projectService } = require('../../../common/services');
-const { RQM_SERVICE_URL } = require('../../../../config');
+const { RQM_SERVICE_URL,
+	 USE_CASE_SERVICE_URL,
+	  CLASS_MODEL_SERVICE_URL } = require('../../../../config');
 
 /**
  * Projects
@@ -45,9 +47,17 @@ router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, 
 		]);
 
 		const promises = modelIDs.map(async model => {
-			const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 
-			return JSON.parse(rqmRes.body);
+			let modelRes;
+			if(model.type == 'rqm') {
+				modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
+			} else if(model.type == 'use_case') {
+				modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use_case/${model.id}`);
+			} else if(model.type == 'class_model') {
+				modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class_model/${model.id}`);
+			}
+
+			return JSON.parse(modelRes.body);
 		});
 
 		const models = await Promise.all(promises);
@@ -83,8 +93,17 @@ router.delete('/:project_id', projectService.checkProjectsByUser, async (req, re
 		await projectService.deleteProjectByID(req.params.project_id);
 
 		const modelIDs = await projectService.getAllModelsByProjectID(req.params.project_id);
+
 		const promises = modelIDs.map(async model => {
-			await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
+
+			if(model.type == 'rqm') {
+				await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
+			} else if(model.type == 'use_case') {
+				await got.delete(`${USE_CASE_SERVICE_URL}/use_case/${model.id}`);
+			} else if(model.type == 'class_model') {
+				await got.delete(`${CLASS_MODEL_SERVICE_URL}/class_model/${model.id}`);
+			}
+
 		});
 
 		await Promise.all(promises);
