@@ -8,7 +8,7 @@ const mongoConnection = {
 	_init: (collectionName) => {
 		if (mongoConnection.collections[collectionName] === undefined) {
 			return new Promise((resolve, reject) => {
-				MongoClient.connect(process.env.MONGO_URL, {
+				MongoClient.connect(config.get('MONGODB_URL'), {
 					useNewUrlParser: true,
 					useUnifiedTopology: true
 				}, function (err, client) {
@@ -16,7 +16,7 @@ const mongoConnection = {
 						return reject(err);
 					}
 
-					const db = client.db(config.get('MONGO_URL').split('/').pop());
+					const db = client.db(config.get('MONGODB_URL').split('/').pop());
 					mongoConnection.collections[collectionName] = db.collection(collectionName);
 
 					resolve(mongoConnection.collections[collectionName]);
@@ -39,16 +39,26 @@ module.exports = {
 		});
 
 		return {
-			find: (filter) => {
+			find: (filter, sort) => {
 				return new Promise((resolve, reject) => {
 					collectionPromise.then(collection => {
-						collection.find(filter).toArray(function (err, results) {
-							if (err) {
-								return reject(err);
-							}
+						if (sort) {
+							collection.find(filter).sort(sort).toArray((err, results) => {
+								if (err) {
+									return reject(err);
+								}
 
-							resolve(results);
-						});
+								resolve(results);
+							});
+						} else {
+							collection.find(filter).toArray((err, results) => {
+								if (err) {
+									return reject(err);
+								}
+
+								resolve(results);
+							});
+						}
 					});
 				});
 			},
@@ -56,7 +66,7 @@ module.exports = {
 			findOne: (filter) => {
 				return new Promise((resolve, reject) => {
 					collectionPromise.then(collection => {
-						collection.find(filter).limit(1).toArray(function (err, results) {
+						collection.find(filter).limit(1).toArray((err, results) => {
 							if (err) {
 								return reject(err);
 							}
@@ -71,12 +81,30 @@ module.exports = {
 				});
 			},
 
+			del: (filter) => {
+				return new Promise((resolve, reject) => {
+					collectionPromise.then(collection => {
+						collection.deleteMany(filter, (err, results) => {
+							if (err) {
+								return reject(err);
+							}
+
+							resolve(results);
+						});
+					});
+				});
+			},
+
 			insert: (object) => {
 				return new Promise((resolve, reject) => {
 					collectionPromise.then(collection => {
-						collection.insertOne(object)
-							.then(resolve)
-							.catch(reject);
+						collection.insertOne(object, (err, results) => {
+							if (err) {
+								return reject(err);
+							}
+
+							resolve(results);
+						});
 					});
 				});
 			}

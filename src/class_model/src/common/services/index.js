@@ -1,1 +1,3 @@
-module.exports = {};
+module.exports = {
+	classModelService: require('./class_model')
+};
