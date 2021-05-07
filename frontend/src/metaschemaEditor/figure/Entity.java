@@ -13,8 +13,9 @@ public class Entity extends FigureGraphic
 	private static long nbOfRectangles = 0;
 	
 	private Point_2D a, b;	
-	private static int width = 80;
-	private static int height = 50;
+	private static int width = 100;
+	private static int height = 150;
+	private ArrayList<Attributes> list= new ArrayList<>();
 //	private ArrayList<JSONObject> attrs;
 	
 	public Entity() {
@@ -31,6 +32,12 @@ public class Entity extends FigureGraphic
         setSelected(true);
         setBuilding(true);
     }
+    
+    public ArrayList<Attributes> getList() {
+		return list;
+	}
+    
+    
 	
 //    public void addAttribute(JSONObject attr) {
 //    	attrs.add(attr);
@@ -72,9 +79,9 @@ public class Entity extends FigureGraphic
 	public void draw(Graphics g, int number) {		
 		Point_2D topleft = getTopLeft();
 		g.setColor(getBgForCurrentState());
-		g.fillRect(topleft.getX(), topleft.getY(), width, height+number*10);
+		g.fillRect(topleft.getX(), topleft.getY(), width, height);
 		g.setColor(getStrokeForCurrentState());
-		g.drawRect(topleft.getX(), topleft.getY(), width, height+number*10);
+		g.drawRect(topleft.getX(), topleft.getY(), width, height);
 		
 		int y = topleft.getY()+30;
 //		for (JSONObject attr : attrs) {
@@ -108,9 +115,11 @@ public class Entity extends FigureGraphic
 		Point_2D topLeft = getTopLeft();
 		g.drawString(name, topLeft.getX()+2, topLeft.getY()+12);
 		
-		for(int i = 0; i < 0; i++)
+		for(int i = 0; i < list.size(); i++)
 		{
-			g.drawString("d", topLeft.getX()+2, topLeft.getY()+42+i*10);
+			g.drawString(list.get(i).getAccessModifiers(), topLeft.getX()+2, topLeft.getY()+42+i*10);
+			g.drawString(list.get(i).getName(), topLeft.getX()+15, topLeft.getY()+42+i*10);
+			g.drawString(list.get(i).getType(), topLeft.getX()+75, topLeft.getY()+42+i*10);
 		}
 	}
 	

@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import classEditor.Mode;
+import metaschemaEditor.figure.Attributes;
 import metaschemaEditor.figure.Entity;
 import metaschemaEditor.figure.FigureGraphic;
 import metaschemaEditor.figure.Point_2D;
@@ -116,12 +117,11 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 					if(name != null) {
 						buildingFigure = new Entity();
 						buildingFigure.setName(name);
-						buildingFigure.getList().add("+ abc");
-						buildingFigure.getList().add("- abc");
-						buildingFigure.getList().add("+ abc");
-						buildingFigure.getList().add("- abc");
-						buildingFigure.getList().add("+ abc");
-						buildingFigure.getList().add("- abc");
+						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
+						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
+						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
+						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
+						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
 						buildingFigure.init(env, e.getX(), e.getY());					
 						env.addEntity((Entity) buildingFigure);
 						env.onSelectionChanged();
@@ -133,6 +133,7 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 			break;
 		case DRAW_LINE:
 			try {
+				
 				buildingFigure = new Relationship();
 				buildingFigure.init(env, e.getX(), e.getY());
 				Entity ent = env.getEntityByPosition(new Point_2D(e.getX(), e.getY()));

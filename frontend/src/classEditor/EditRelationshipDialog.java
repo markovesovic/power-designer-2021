@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 //import org.json.JSONObject;
 
@@ -23,19 +24,15 @@ import metaschemaEditor.figure.Relationship;
 @SuppressWarnings("serial")
 public class EditRelationshipDialog extends JDialog {
 
-	private JLabel lblFrom;
-	private JLabel lblTo;
-	private JComboBox<String> cmbFrom;
-	private JComboBox<String> cmbTo;
+	private JLabel lblName;
+	private JTextField tfName;
 	private JButton btnOK;
 	
 	private boolean ok;
 	
 	public EditRelationshipDialog(Relationship rel) {
-		lblFrom = new JLabel("From");
-		lblTo = new JLabel("To");
-//		cmbFrom = new JComboBox<String>(getAttributeNames(rel.getEntity1().getAttributes()));
-//		cmbTo = new JComboBox<String>(getAttributeNames(rel.getEntity2().getAttributes()));
+		lblName = new JLabel("Type of Relationship:");
+		tfName = new JTextField();
 		btnOK = new JButton("OK");
 		ok = false;
 		
@@ -43,16 +40,9 @@ public class EditRelationshipDialog extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String val = (String) cmbFrom.getSelectedItem();
-				if(val==null || val.isEmpty()) {
-					showMsgEmpty();
-					return;
-				}
-				rel.setFrom(val);
-				val = (String) cmbTo.getSelectedItem();
-				if(val!=null && !val.isEmpty())
-					rel.setTo(val);
-				ok=true;
+				String val = tfName.getText();
+				
+				rel.setName(val);
 				dispose();
 			}
 		});
@@ -76,14 +66,23 @@ public class EditRelationshipDialog extends JDialog {
 //		up.add(to);
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 //		panel.add(up);
+		lblName.setAlignmentX(CENTER_ALIGNMENT);
+		tfName.setAlignmentX(CENTER_ALIGNMENT);
 //		panel.add(Box.createVerticalGlue());
 		btnOK.setAlignmentX(CENTER_ALIGNMENT);
+		
+		panel.add(Box.createVerticalGlue());
+		panel.add(lblName);
+		panel.add(Box.createVerticalGlue());
+		panel.add(tfName);
+		panel.add(Box.createVerticalGlue());
 		panel.add(btnOK);
 		panel.add(Box.createVerticalGlue());
 		add(panel);
 
-		setSize(300,200);
+		setSize(200,100);
 		setModal(true);
 		setLocationRelativeTo(null);	
 	}

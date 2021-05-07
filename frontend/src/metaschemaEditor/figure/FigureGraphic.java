@@ -9,7 +9,7 @@ public abstract class FigureGraphic implements Figure
 {
     protected Color colorStroke, colorBackground;
 	protected String name;
-	protected ArrayList<String> list= new ArrayList<>();
+	
 	
 	protected static final int THRESHOLD_BUILDING_PX = 8;
 	
@@ -45,9 +45,7 @@ public abstract class FigureGraphic implements Figure
     	colorBackground = bg;
 	}
 	
-	public ArrayList<String> getList() {
-		return list;
-	}
+	
 
 	public Color getStrokeColor()
 	{

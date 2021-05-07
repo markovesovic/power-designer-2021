@@ -31,14 +31,14 @@ public class EditEntityDialog extends JDialog {
 		btnAddAttr = new JButton("Add attribute...");
 		btnDone = new JButton("Done");
 		
-//		btnAddAttr.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				JSONObject attr = new NewAtributeDialog().getAttr();
-//				if(attr!=null) ent.addAttribute(attr);
-//			}
-//		});
+		btnAddAttr.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NewAtributeDialog newAtr = new NewAtributeDialog(ent);
+				newAtr.show();
+			}
+		});
 		
 		btnDone.addActionListener(new ActionListener() {
 			

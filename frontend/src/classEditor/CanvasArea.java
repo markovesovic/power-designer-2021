@@ -42,7 +42,7 @@ public class CanvasArea extends Canvas {
 		List<Entity> ents = new ArrayList<Entity>(env.getEntities());
 		Collections.reverse(ents);
 		for(Entity ent : ents)
-			ent.draw(g,0);
+			ent.draw(g,10);
 		for(Relationship rel : env.getRelationships())
 			rel.draw(g,0);
 		if(selection!=null)

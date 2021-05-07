@@ -305,7 +305,6 @@ public class Env {
 			if(f instanceof Entity){
 				for(Relationship r : rels)
 				{
-					r.setName(r.getEntity1().getName()+r.getEntity2().getName());
 					if(r.getEntity1().equals(f)||r.getEntity2().equals(f))
 						relsDel.add(r);
 				}

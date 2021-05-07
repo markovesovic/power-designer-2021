@@ -14,6 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import metaschemaEditor.figure.Attributes;
+import metaschemaEditor.figure.Entity;
+
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
@@ -22,99 +25,63 @@ import javax.swing.JTextField;
 public class NewAtributeDialog extends JDialog{
 //	private JSONObject attr;
 	
+	private JLabel lblAccess;
+	private JTextField tfAccess;
 	private JLabel lblName;
 	private JTextField tfName;
-	private JLabel lblDatatype;
-	private JTextField tfDatatype;
-	private JLabel lblLength;
-	private JTextField tfLength;
-	private JRadioButton rbMandatory;
-	private JRadioButton rbPK;
-	private JLabel lblDefault;
-	private JTextField tfDefault;
+	private JLabel lblType;
+	private JTextField tfType;
 	private JButton btnOk;
 	
-	public NewAtributeDialog() {
+	public NewAtributeDialog(Entity ent) {
 		JPanel left = new JPanel();
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		left.add(Box.createVerticalGlue());
-		lblName = new JLabel("Name:");
+		lblAccess = new JLabel("Access Modifier:");
+		left.add(lblAccess);
+		left.add(Box.createVerticalGlue());
+		tfAccess = new JTextField();
+		left.add(tfAccess);
+		left.add(Box.createVerticalGlue());
+		lblName = new JLabel("Name of method:");
 		left.add(lblName);
 		left.add(Box.createVerticalGlue());
 		tfName = new JTextField();
 		left.add(tfName);
 		left.add(Box.createVerticalGlue());
-		lblDatatype = new JLabel("Datatype:");
-		left.add(lblDatatype);
-		left.add(Box.createVerticalGlue());
-		tfDatatype = new JTextField();
-		left.add(tfDatatype);
-		left.add(Box.createVerticalGlue());
-		lblLength = new JLabel("Lenght:");
-		left.add(lblLength);
-		tfLength = new JTextField();
-		left.add(tfLength);
+		lblType = new JLabel("Type:");
+		left.add(lblType);
+		tfType = new JTextField();
+		left.add(tfType);
 		left.add(Box.createVerticalGlue());
 		left.add(Box.createVerticalGlue());
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		right.add(Box.createVerticalGlue());
-		rbMandatory = new JRadioButton("Mandatory");
-		right.add(rbMandatory);
-		right.add(Box.createVerticalGlue());
-		rbPK = new JRadioButton("Primary key");
-		right.add(rbPK);
-		right.add(Box.createVerticalGlue());
-		lblDefault = new JLabel("Default value:");
-		right.add(lblDefault);
-		right.add(Box.createVerticalGlue());
-		tfDefault = new JTextField();
-		right.add(tfDefault);
-		right.add(Box.createVerticalGlue());
 		btnOk = new JButton("Ok");
 		
-		rbPK.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(rbPK.isSelected())
-				rbMandatory.setSelected(true);
-			}
-		});
 		
 		btnOk.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String name = tfName.getText();
+				String name = tfAccess.getText();
 				if(name.isEmpty()) {
-					showMessage("Name");
+					showMessage("Access Modifier");
 					return;
 				}
-				String dt = tfDatatype.getText();
+				String dt = tfName.getText();
 				if(dt.isEmpty()) {
-					showMessage("Datatype");
+					showMessage("Name of method");
 					return;
 				}
-				int length = 0;
-				if(!tfLength.getText().isEmpty())
-					Integer.parseInt(tfLength.getText());
-				boolean mand = rbMandatory.isSelected();
-				boolean pk = rbPK.isSelected();
-				String def = tfDefault.getText();
-				if(def.isEmpty()) def="null";
+				String type = tfType.getText();
+				if(type.isEmpty()) {
+					showMessage("Type");
+					return;
+				}
 				
-//				try {
-//					attr = new JSONObject().put("name", name)
-//							.put("datatype", dt)
-//							.put("length", length)
-//							.put("mandatory", mand)
-//							.put("pk", pk)
-//							.put("default", def);
-//					dispose();
-//				} catch (JSONException e1) {
-//					e1.printStackTrace();
-//				}
+				ent.getList().add(new Attributes(name, dt, type));
 			}
 		});		
 		
