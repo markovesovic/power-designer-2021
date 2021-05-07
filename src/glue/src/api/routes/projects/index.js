@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 		const teamID = req.headers.team_id;
 
 		if (!teamID) {
-			const projects = projectService.getProjectsByUserID(userID);
+			const projects = await projectService.getProjectsByUserID(userID);
 
 			res.status(200)
 				.json(Response.success({
@@ -25,7 +25,7 @@ router.get('/', async (req, res, next) => {
 				}))
 				.end();
 		} else {
-			const projects = projectService.getProjectsByTeamID(teamID);
+			const projects = await projectService.getProjectsByTeamID(teamID);
 
 			res.status(200)
 				.json(Response.success({
@@ -52,9 +52,9 @@ router.get('/:project_id', projectService.checkProjectsByUser, async (req, res, 
 			if(model.type == 'rqm') {
 				modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 			} else if(model.type == 'use_case') {
-				modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use_case/${model.id}`);
+				modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use-case/${model.id}`);
 			} else if(model.type == 'class_model') {
-				modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class_model/${model.id}`);
+				modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class-model/${model.id}`);
 			}
 
 			return JSON.parse(modelRes.body);
@@ -90,21 +90,23 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/:project_id', projectService.checkProjectsByUser, async (req, res, next) => {
 	try {
-		await projectService.deleteProjectByID(req.params.project_id);
-
 		const modelIDs = await projectService.getAllModelsByProjectID(req.params.project_id);
 
-		const promises = modelIDs.map(async model => {
+		await projectService.deleteProjectByID(req.params.project_id);
 
+		const promises = modelIDs.map(async model => {
+			
 			if(model.type == 'rqm') {
 				await got.delete(`${RQM_SERVICE_URL}/rqm/${model.id}`);
 			} else if(model.type == 'use_case') {
-				await got.delete(`${USE_CASE_SERVICE_URL}/use_case/${model.id}`);
+				await got.delete(`${USE_CASE_SERVICE_URL}/use-case/${model.id}`);
 			} else if(model.type == 'class_model') {
-				await got.delete(`${CLASS_MODEL_SERVICE_URL}/class_model/${model.id}`);
+				await got.delete(`${CLASS_MODEL_SERVICE_URL}/class-model/${model.id}`);
 			}
 
 		});
+
+		await projectService.deleteAllModelsByProjectID(req.params.project_id);
 
 		await Promise.all(promises);
 

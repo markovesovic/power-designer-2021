@@ -24,10 +24,11 @@ router.post('/', projectService.checkProjectsByUser, modelValidationService.vali
 			modelServiceRoute = 'rqm';
 		} else if(req.body.model_type == 'use_case') {
 			modelService = USE_CASE_SERVICE_URL;
-			modelServiceRoute = 'use_case';
+			modelServiceRoute = 'class-model';
+			// modelServiceRoute = 'use-case';
 		} else if(req.body.model_type == 'class_model') {
 			modelService = CLASS_MODEL_SERVICE_URL;
-			modelServiceRoute = 'class_model';
+			modelServiceRoute = 'class-model';
 		}
 
 		const rqmRes = await got.post(`${modelService}/${modelServiceRoute}`, {
@@ -52,14 +53,14 @@ router.get('/:model_id', projectService.checkProjectsByUser, async (req, res, ne
 	try {
 
 		let modelRes;
+
 		if(req.body.model_type == 'rqm') {
-			modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
+			modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}?version=${+req.query.version}`);
 		} else if(req.body.model_type == 'use_case') {
-			modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use_case/${req.params.model_id}`);
+			modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use-case/${req.params.model_id}?version=${+req.query.version}`);
 		} else if(req.body.model_type == 'class_model') {
-			modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class_model/${req.params.model_id}`);
+			modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class-model/${req.params.model_id}?version=${+req.query.version}`);
 		}
-		// const rqmRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 
 		res.status(200)
 			.end(modelRes.body);
@@ -75,12 +76,10 @@ router.delete('/:model_id', projectService.checkProjectsByUser, async (req, res,
 		if(req.body.model_type == 'rqm') {
 			await got.delete(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 		} else if(req.body.model_type == 'use_case') {
-			await got.delete(`${USE_CASE_SERVICE_URL}/use_case/${req.params.model_id}`);
+			await got.delete(`${USE_CASE_SERVICE_URL}/use-case/${req.params.model_id}`);
 		} else if(req.body.model_type == 'class_model') {
-			await got.delete(`${CLASS_MODEL_SERVICE_URL}/class_model/${req.params.model_id}`);
+			await got.delete(`${CLASS_MODEL_SERVICE_URL}/class-model/${req.params.model_id}`);
 		}
-
-		// await got.delete(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}`);
 
 		res.status(200)
 			.json(Response.success())

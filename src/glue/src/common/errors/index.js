@@ -70,9 +70,10 @@ class RegisterEmailConflict extends Error {
 }
 
 class InvalidModelError extends Error {
-	constructor() {
+	constructor(messageParam) {
 		super();
 		this.name = 'InvalidModelError';
+		this.message = messageParam;
 	}
 }
 

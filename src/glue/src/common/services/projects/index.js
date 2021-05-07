@@ -12,6 +12,7 @@ module.exports = {
 	updateProjectByID,
 
 	getAllModelsByProjectID,
+	deleteAllModelsByProjectID,
 	createModel,
 	deleteModel,
 
@@ -71,10 +72,14 @@ async function updateProjectByID (id, changes) {
 
 async function getAllModelsByProjectID (projectID) {
 	const IDs = await db('models')
-		.select('model_id AS id, model_type AS type')
+		.select(['model_id AS id', 'model_type AS type'])
 		.where({ project_id: projectID });
 
 	return IDs;
+}
+
+async function deleteAllModelsByProjectID (projectID) {
+	await db('models').where({ project_id: projectID}).del();
 }
 
 async function createModel (modelID, projectID, modelType) {

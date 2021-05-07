@@ -35,7 +35,7 @@ function error (err, req, res, next) {
 		res.status(409).json(Response.error(409, 'User with this email already exists', err.name));
 	} 
 	else if(err instanceof errors.InvalidModelError || err.name === 'InvalidModelError') {
-		res.status(406).json(Response.error(406, 'Model didn\'t pass validation'));
+		res.status(406).json(Response.error(406, 'Model didn\'t pass validation: ' + err.message));
 	}
 	else {
 		next(err);
