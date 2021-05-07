@@ -14,7 +14,12 @@ async function addModel (model) {
 		model.version = 1;
 	} else {
 		const lastModel = await getModel(model.id);
-		model.version = lastModel.version + 1;
+
+		if (lastModel) {
+			model.version = lastModel.version + 1;
+		} else {
+			model.version = 1;
+		}
 	}
 
 	await db.client('class_model').insert(model);
