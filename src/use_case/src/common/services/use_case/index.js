@@ -22,21 +22,21 @@ async function addModel (model) {
 		}
 	}
 
-	await db.client('class_model').insert(model);
+	await db.client('use_case').insert(model);
 
 	return model;
 }
 
 async function getModel (id, version) {
 	if (version) {
-		return db.client('class_model').find({ id, version });
+		return db.client('use_case').find({ id, version });
 	}
 
-	const modelVersions = await db.client('class_model').find({ id }, { version: -1 });
+	const modelVersions = await db.client('use_case').find({ id }, { version: -1 });
 
 	return modelVersions[0];
 }
 
 function deleteModel (id) {
-	return db.client('class_model').del({ id });
+	return db.client('use_case').del({ id });
 }
