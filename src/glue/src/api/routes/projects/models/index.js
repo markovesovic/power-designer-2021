@@ -22,28 +22,30 @@ router.post('/', projectService.checkProjectsByUser, modelValidationService.vali
 		if(req.body.model_type == 'rqm') {
 			modelService = RQM_SERVICE_URL;
 			modelServiceRoute = 'rqm';
+
 		} else if(req.body.model_type == 'use_case') {
 			modelService = USE_CASE_SERVICE_URL;
-			modelServiceRoute = 'class-model';
-			// modelServiceRoute = 'use-case';
+			modelServiceRoute = 'use-case';
+
 		} else if(req.body.model_type == 'class_model') {
 			modelService = CLASS_MODEL_SERVICE_URL;
 			modelServiceRoute = 'class-model';
 		}
 
-		const rqmRes = await got.post(`${modelService}/${modelServiceRoute}`, {
+		const modelRes = await got.post(`${modelService}/${modelServiceRoute}`, {
 			headers: {
 				'content-type': 'application/json'
 			},
 			body: JSON.stringify(req.body)
 		});
+		console.log(modelRes)
 
 		if (!req.body.id) {
-			await projectService.createModel(JSON.parse(rqmRes.body).id, req.params.project_id, req.body.model_type);
+			await projectService.createModel(JSON.parse(modelRes.body).id, req.params.project_id, req.body.model_type);
 		}
 
 		res.status(200)
-			.end(rqmRes.body);
+			.end(modelRes.body);
 	} catch (err) {
 		next(err);
 	}

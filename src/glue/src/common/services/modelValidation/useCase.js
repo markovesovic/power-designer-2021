@@ -66,18 +66,21 @@ module.exports.validateUseCaseModel = async (model) => {
 
    let invalid = false;
    let useCaseIDs = [];
+   let message = '';
 
    model.use_case.forEach(use_case => {
       useCaseIDs.push(use_case.id);
 
       if(use_case.type == 'actor' && use_case.to.length != 0) {
          invalid = true;
+         message = 'actor has connections to itself';
       }
 
       // Check if use case is related to itself
       if(use_case.from.some( elem => elem.id === use_case.id) ||
          use_case.to.some( elem => elem.id === use_case.id)) {
             invalid = true;
+            message = 'use_case related to itself';
          }
    });
 
@@ -85,20 +88,21 @@ module.exports.validateUseCaseModel = async (model) => {
       use_case.from.forEach(({ id }) => {
          if(!useCaseIDs.some(useCaseID => useCaseID == id)) {
             invalid = true;
+            message = 'invalid id used in use_case reference';
          }
       });
    })
    
    if(invalid) {
-      return false;
+      return { valid: false, message: message };
    }
 
    const { error } = schema.validate(model);
 
    if(error) {
-      console.log(error)
-      return false;
+      console.log(error);
+      return { valid: false, message: error.message };
    }
 
-   return true;
+   return { valid: true, message: null };
 }

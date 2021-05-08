@@ -17,7 +17,7 @@ async function validateModel(req, _res, next) {
          next();
          
       } else if(req.body.model_type == 'use_case') {
-         valid = await validateUseCaseModel(req.body);
+         ({ valid , message } = await validateUseCaseModel(req.body));
          
       } else if(req.body.model_type == 'class_model') {
          ({ valid, message } = await validateClassModel(req.body));
