@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import classEditor.Window;
+import useCaseEditor.WindowUse;
 
 public class OpenUseCase extends MyAbstractAction{
 	
@@ -19,9 +20,7 @@ public class OpenUseCase extends MyAbstractAction{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//MyTreeNode sel = (MyTreeNode) AppCore.getInstance().getTree().getLastSelectedPathComponent();
-		//if(sel==null) return;
-		Window window = new Window("abc"/*sel.getFile().getPath()*/);
+		WindowUse window = new WindowUse("abc");
 		window.setVisible(true);
 		
 	}

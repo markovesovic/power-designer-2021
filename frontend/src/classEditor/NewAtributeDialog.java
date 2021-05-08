@@ -14,16 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import metaschemaEditor.figure.Attributes;
-import metaschemaEditor.figure.Entity;
+import modelEditor.figure.Attributes;
+import modelEditor.figure.Entity;
 
-//import org.json.JSONException;
-//import org.json.JSONObject;
 
 
 @SuppressWarnings("serial")
 public class NewAtributeDialog extends JDialog{
-//	private JSONObject attr;
 	
 	private JLabel lblAccess;
 	private JTextField tfAccess;
@@ -82,6 +79,7 @@ public class NewAtributeDialog extends JDialog{
 				}
 				
 				ent.getList().add(new Attributes(name, dt, type));
+				dispose();
 			}
 		});		
 		

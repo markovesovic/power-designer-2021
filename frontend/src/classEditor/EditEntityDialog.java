@@ -13,9 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-//import org.json.JSONObject;
-
-import metaschemaEditor.figure.Entity;
+import modelEditor.figure.Entity;
 
 @SuppressWarnings("serial")
 public class EditEntityDialog extends JDialog {

@@ -45,7 +45,6 @@ public class Window extends JFrame {
 		env.setSelectionPanel(selectionPanel);
 		env.setCanvas(canvas);
 		env.setCanvasMouseListener(cml);
-		//env.readMetaScheme(new File("json_seme/salata_bar.json"));
 		
 		canvas.addMouseListener(cml);
 		canvas.addMouseMotionListener(cml);

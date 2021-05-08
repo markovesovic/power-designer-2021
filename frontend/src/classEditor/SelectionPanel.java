@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import metaschemaEditor.figure.FigureGraphic;
+import modelEditor.figure.FigureGraphic;
 
 @SuppressWarnings("serial")
 public class SelectionPanel extends JScrollPane {

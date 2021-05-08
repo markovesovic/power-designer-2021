@@ -6,11 +6,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import classEditor.Mode;
-import metaschemaEditor.figure.Attributes;
-import metaschemaEditor.figure.Entity;
-import metaschemaEditor.figure.FigureGraphic;
-import metaschemaEditor.figure.Point_2D;
-import metaschemaEditor.figure.Relationship;
+import modelEditor.figure.Attributes;
+import modelEditor.figure.Entity;
+import modelEditor.figure.FigureGraphic;
+import modelEditor.figure.Point_2D;
+import modelEditor.figure.Relationship;
+import useCaseEditor.NewEntityDialogUse;
 
 public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 	
@@ -32,8 +33,6 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 	
 	public void finishBuildingFigure() {
 		boolean finish = true;
-//		if(buildingFigure.canBeFinished())
-//			finish = buildingFigure.onFigureFinish();
 		if(!finish) env.remove(buildingFigure);
 		buildingFigure.setBuilding(false);
 		buildingFigure = null;
@@ -113,15 +112,28 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 				break;
 			if(buildingFigure==null) {
 				try {
-					String name = new NewEntityDialog().getName();
+					String name = new NewEntityDialogUse().getName();
 					if(name != null) {
-						buildingFigure = new Entity();
+						buildingFigure = new Entity(Mode.DRAW_RECTANGLE);
 						buildingFigure.setName(name);
-						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
-						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
-						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
-						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
-						((Entity)buildingFigure).getList().add(new Attributes("+", "fasfa", "int"));
+						buildingFigure.init(env, e.getX(), e.getY());					
+						env.addEntity((Entity) buildingFigure);
+						env.onSelectionChanged();
+						finishBuildingFigure();
+					}
+				}
+				catch (Exception exception) {}
+			}
+			break;
+		case DRAW_ACTOR:
+			if(env.getOneByPosition(new Point_2D(e.getX(),e.getY()))!=null)
+				break;
+			if(buildingFigure==null) {
+				try {
+					String name = new NewEntityDialogUse().getName();
+					if(name != null) {
+						buildingFigure = new Entity(Mode.DRAW_ACTOR);
+						buildingFigure.setName(name);
 						buildingFigure.init(env, e.getX(), e.getY());					
 						env.addEntity((Entity) buildingFigure);
 						env.onSelectionChanged();

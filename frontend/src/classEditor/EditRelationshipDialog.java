@@ -17,9 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-//import org.json.JSONObject;
-
-import metaschemaEditor.figure.Relationship;
+import modelEditor.figure.Relationship;
 
 @SuppressWarnings("serial")
 public class EditRelationshipDialog extends JDialog {
@@ -47,30 +45,11 @@ public class EditRelationshipDialog extends JDialog {
 			}
 		});
 		
-//		JPanel from = new JPanel();
-//		from.setLayout(new GridLayout(2,1));
-//		lblFrom.setAlignmentX(CENTER_ALIGNMENT);
-//		cmbFrom.setAlignmentX(CENTER_ALIGNMENT);
-//		from.add(lblFrom);
-//		from.add(cmbFrom);
-//		JPanel to = new JPanel();
-//		to.setLayout(new GridLayout(2,1));
-//		lblTo.setAlignmentX(CENTER_ALIGNMENT);
-//		lblTo.setSize(new Dimension(100,10));
-//		cmbTo.setAlignmentX(CENTER_ALIGNMENT);
-//		to.add(lblTo);
-//		to.add(cmbTo);
-//		JPanel up = new JPanel();
-//		up.setLayout(new GridLayout(1,2));
-//		up.add(from);
-//		up.add(to);
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
-//		panel.add(up);
 		lblName.setAlignmentX(CENTER_ALIGNMENT);
 		tfName.setAlignmentX(CENTER_ALIGNMENT);
-//		panel.add(Box.createVerticalGlue());
 		btnOK.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panel.add(Box.createVerticalGlue());
@@ -92,18 +71,6 @@ public class EditRelationshipDialog extends JDialog {
 		return ok;
 	}
 	
-//	private Vector<String> getAttributeNames(ArrayList<JSONObject> attrs){
-//		try {
-//			Vector<String> names = new Vector<String>();
-//			names.add("");
-//			for (JSONObject attr : attrs)
-//				names.add(attr.getString("name"));
-//			return names;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
 
 	private void showMsgEmpty() {
 		JOptionPane.showMessageDialog(this, "'From' field can't be empty");		

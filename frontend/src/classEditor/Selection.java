@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import metaschemaEditor.figure.Point_2D;
+import modelEditor.figure.Point_2D;
 
 public class Selection
 {

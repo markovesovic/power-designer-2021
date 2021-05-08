@@ -19,8 +19,8 @@ import javax.swing.*;
 
 import app.AppCore;
 import classEditor.Mode;
-import metaschemaEditor.figure.Entity;
-import metaschemaEditor.figure.Relationship;
+import modelEditor.figure.Entity;
+import modelEditor.figure.Relationship;
 
 @SuppressWarnings("serial")
 public class ToolBox extends JPanel {
@@ -102,19 +102,6 @@ public class ToolBox extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					File file = window.getFile();
-//					JSONObject o = new JSONObject().put("name", Utils.getMetaSchemeName(file));
-//					for(Entity ent : env.getEntities())
-//						o.append("entities", ent.toJSONObject());
-//					for(Relationship rel : env.getRelationships())
-//						o.append("relations", rel.toJSONObject());
-					
-//					if(MetaSchemaChecker.isMetaSchemaValid(o, AppCore.getInstance().getMetametaschemafile())) {
-//						PrintWriter pw = new PrintWriter(file);
-//						pw.print(o.toString(2));
-//						pw.flush();
-//						pw.close();
-//					}
-					
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}

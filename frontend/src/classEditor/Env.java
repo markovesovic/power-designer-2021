@@ -8,15 +8,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.json.JSONArray;
-//import org.json.JSONObject;
-//import org.json.JSONTokener;
-
-import metaschemaEditor.figure.Entity;
-import metaschemaEditor.figure.Figure;
-import metaschemaEditor.figure.FigureGraphic;
-import metaschemaEditor.figure.Point_2D;
-import metaschemaEditor.figure.Relationship;
+import modelEditor.figure.Entity;
+import modelEditor.figure.Figure;
+import modelEditor.figure.FigureGraphic;
+import modelEditor.figure.Point_2D;
+import modelEditor.figure.Relationship;
 
 
 public class Env {
@@ -115,57 +111,6 @@ public class Env {
 		getRelationships().add(0, r);
 	}
 	
-//	private Entity toEntity(JSONObject o) {
-//		Entity ent = new Entity();
-//		try {
-//			ent.setName(o.getString("name"));
-//			JSONArray attrs = o.getJSONArray("attributes");
-//			for (int i = 0; i < attrs.length(); i++) {
-//				ent.addAttribute(attrs.getJSONObject(i));
-//			}
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		return ent;
-//	}
-//
-//	private Relationship toRelationship(JSONObject o) {
-//		try {
-//			Relationship rel = new Relationship();
-//			rel.setEntity1(getEntityByName(o.getString("entity1")));
-//			rel.setEntity2(getEntityByName(o.getString("entity2")));
-//			rel.setFrom(o.getString("from"));
-//			try {
-//				rel.setTo(o.getString("to"));
-//			}catch(Exception e) {}
-//			return rel;
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		return null;
-//	}
-//
-//	public void readMetaScheme(File metaScheme) {
-//		try {
-//			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(metaScheme)));
-//			JSONTokener tokener = new JSONTokener(br);
-//			JSONObject o = new JSONObject(tokener);
-//			br.close();
-//
-//			JSONArray ents = o.getJSONArray("entities");
-//			for (int i = 0; i < ents.length(); i++) {
-//				addEntity(toEntity(ents.getJSONObject(i)));
-//			}
-//			JSONArray rels = o.getJSONArray("relations");
-//			for (int i = 0; i < rels.length(); i++) {
-//				addRelationship(toRelationship(rels.getJSONObject(i)));
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
 	
 	public void empty() {
 		data = new Data();
@@ -248,7 +193,6 @@ public class Env {
 	public void selectFigure(FigureGraphic figure) {
 		emptySelection();
 		setSelected(figure, true);
-		//sortFigures();
 		onSelectionChanged();
 	}
 	
@@ -257,7 +201,6 @@ public class Env {
 		FigureGraphic figure = getOneByPosition(p);
 		if(figure!=null) {
 			setSelected(figure, true);
-			//sortFigures();
 		}
 		onSelectionChanged();
 		return figure;

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import metaschemaEditor.figure.Entity;
-import metaschemaEditor.figure.Relationship;
+import modelEditor.figure.Entity;
+import modelEditor.figure.Relationship;
 
 @SuppressWarnings("serial")
 public class CanvasArea extends Canvas {
