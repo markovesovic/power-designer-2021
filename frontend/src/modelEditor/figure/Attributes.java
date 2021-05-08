@@ -5,12 +5,14 @@ public class Attributes {
 	private String accessModifiers;
 	private String name;
 	private String type;
+	private boolean function;
 	
-	public Attributes(String accessModifiers, String name, String type) {
+	public Attributes(String accessModifiers, String name, String type, boolean function) {
 		super();
 		this.accessModifiers = accessModifiers;
 		this.name = name;
 		this.type = type;
+		this.function = function;
 	}
 	public String getAccessModifiers() {
 		return accessModifiers;

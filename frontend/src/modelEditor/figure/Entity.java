@@ -28,6 +28,8 @@ public class Entity extends FigureGraphic
 	private int height;
 	private ArrayList<Attributes> list= new ArrayList<>();
 	private Mode mode;
+	private String type;
+	private boolean isAbstract;
 	
 	public Entity(Mode mode) {
 		super("Entetitet"+(++nbOfRectangles), Color.black, new Color(200, 200, 250));
@@ -36,8 +38,8 @@ public class Entity extends FigureGraphic
 			height = 60;
 		}
 		else {
-			width = 80;
-			height = 120;
+			width = 160;
+			height = 140;
 		}
 		this.mode = mode;
 		setFirstPoint((int)(Math.random()*600), (int)(Math.random()*300)); //TODO get canvas dimensions
@@ -45,7 +47,19 @@ public class Entity extends FigureGraphic
 		
 	}
 
-    public void init(Env env, int x, int y) {
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public boolean isAbstract() {
+		return isAbstract;
+	}
+
+	public void init(Env env, int x, int y) {
     	setColors(env);
     	setFirstPoint(x-width/2, y-height/2);
     	setSecondPoint(x+width/2, y+height/2);
@@ -132,8 +146,8 @@ public class Entity extends FigureGraphic
 		for(int i = 0; i < list.size(); i++)
 		{
 			g.drawString(list.get(i).getAccessModifiers(), topLeft.getX()+2, topLeft.getY()+42+i*10);
-			g.drawString(list.get(i).getName(), topLeft.getX()+15, topLeft.getY()+42+i*10);
-			g.drawString(list.get(i).getType(), topLeft.getX()+75, topLeft.getY()+42+i*10);
+			g.drawString(list.get(i).getName(), topLeft.getX()+60, topLeft.getY()+42+i*10);
+			g.drawString(list.get(i).getType(), topLeft.getX()+130, topLeft.getY()+42+i*10);
 		}
 	}
 	

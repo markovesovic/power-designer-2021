@@ -1,18 +1,10 @@
 package classEditor;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import modelEditor.figure.Attributes;
 import modelEditor.figure.Entity;
@@ -29,6 +21,9 @@ public class NewAtributeDialog extends JDialog{
 	private JLabel lblType;
 	private JTextField tfType;
 	private JButton btnOk;
+	private JLabel lblFunc;
+	private JCheckBox cbFunc;
+	private JComboBox cmbAccess;
 	
 	public NewAtributeDialog(Entity ent) {
 		JPanel left = new JPanel();
@@ -37,10 +32,13 @@ public class NewAtributeDialog extends JDialog{
 		lblAccess = new JLabel("Access Modifier:");
 		left.add(lblAccess);
 		left.add(Box.createVerticalGlue());
-		tfAccess = new JTextField();
-		left.add(tfAccess);
+		//tfAccess = new JTextField();
+		String accessModifiers[]={"private","public","protected","default"};
+		cmbAccess = new JComboBox(accessModifiers);
+		cmbAccess.setSelectedItem(cmbAccess.getItemAt(0));
+		left.add(cmbAccess);
 		left.add(Box.createVerticalGlue());
-		lblName = new JLabel("Name of method:");
+		lblName = new JLabel("Name:");
 		left.add(lblName);
 		left.add(Box.createVerticalGlue());
 		tfName = new JTextField();
@@ -52,9 +50,9 @@ public class NewAtributeDialog extends JDialog{
 		left.add(tfType);
 		left.add(Box.createVerticalGlue());
 		left.add(Box.createVerticalGlue());
-		JPanel right = new JPanel();
-		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.add(Box.createVerticalGlue());
+		lblFunc = new JLabel("Function:");
+		cbFunc = new JCheckBox();
+
 		btnOk = new JButton("Ok");
 		
 		
@@ -62,7 +60,7 @@ public class NewAtributeDialog extends JDialog{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String name = tfAccess.getText();
+				String name = cmbAccess.getSelectedItem().toString();
 				if(name.isEmpty()) {
 					showMessage("Access Modifier");
 					return;
@@ -78,7 +76,7 @@ public class NewAtributeDialog extends JDialog{
 					return;
 				}
 				
-				ent.getList().add(new Attributes(name, dt, type));
+				ent.getList().add(new Attributes(name, dt, type, cbFunc.isSelected()));
 				dispose();
 			}
 		});		
@@ -87,9 +85,14 @@ public class NewAtributeDialog extends JDialog{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JPanel up = new JPanel();
 		up.setLayout(new GridLayout(1, 2));
+		JPanel panelFunc = new JPanel();
+		panelFunc.setLayout(new BoxLayout(panelFunc, BoxLayout.X_AXIS));
+		panelFunc.add(lblFunc);
+		panelFunc.add(cbFunc);
 		up.add(left);
-		up.add(right);
 		panel.add(up);
+		panel.add(Box.createVerticalGlue());
+		panel.add(panelFunc);
 		panel.add(Box.createVerticalGlue());
 		btnOk.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(btnOk);

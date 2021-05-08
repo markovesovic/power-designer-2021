@@ -10,6 +10,8 @@ public abstract class FigureGraphic implements Figure
 {
     protected Color colorStroke, colorBackground;
 	protected String name;
+	protected boolean isAbstract;
+	protected String type;
 	
 	
 	protected static final int THRESHOLD_BUILDING_PX = 8;
@@ -100,6 +102,23 @@ public abstract class FigureGraphic implements Figure
 	public String getName() {
 		return name;
 	}
+
+	public boolean isAbstract() {
+		return isAbstract;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setAbstract(boolean anAbstract) {
+		isAbstract = anAbstract;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

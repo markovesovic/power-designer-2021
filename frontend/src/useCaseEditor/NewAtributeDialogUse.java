@@ -78,7 +78,7 @@ public class NewAtributeDialogUse extends JDialog{
 					return;
 				}
 				
-				ent.getList().add(new Attributes(name, dt, type));
+				ent.getList().add(new Attributes(name, dt, type,false));
 				dispose();
 			}
 		});		
