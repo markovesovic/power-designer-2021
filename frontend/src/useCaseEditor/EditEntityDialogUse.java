@@ -20,23 +20,14 @@ public class EditEntityDialogUse extends JDialog {
 
 	private JLabel lblName;
 	private JTextField tfName;
-	private JButton btnAddAttr;
 	private JButton btnDone;
 	
 	public EditEntityDialogUse(Entity ent) {
 		lblName = new JLabel("Entity name:");
 		tfName = new JTextField(ent.getName());
-		btnAddAttr = new JButton("Add attribute...");
 		btnDone = new JButton("Done");
 		
-		btnAddAttr.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NewAtributeDialogUse newAtr = new NewAtributeDialogUse(ent);
-				newAtr.show();
-			}
-		});
 		
 		btnDone.addActionListener(new ActionListener() {
 			
@@ -62,8 +53,6 @@ public class EditEntityDialogUse extends JDialog {
 		
 		JPanel btns = new JPanel();
 		btns.setLayout(new BoxLayout(btns, BoxLayout.X_AXIS));
-		btns.add(Box.createHorizontalGlue());
-		btns.add(btnAddAttr);
 		btns.add(Box.createHorizontalGlue());
 		btns.add(btnDone);
 		btns.add(Box.createHorizontalGlue());
