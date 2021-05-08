@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import modelEditor.figure.Entity;
 import modelEditor.figure.Figure;
@@ -16,6 +17,9 @@ import modelEditor.figure.Relationship;
 
 
 public class Env {
+
+	private UUID uuid;
+	private int version = 0;
 	
 	protected Data data = new Data();
 	
@@ -257,5 +261,20 @@ public class Env {
 			rels.removeAll(relsDel);
 		onSelectionChanged();
 	}
-	
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID id) {
+		this.uuid = id;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 }

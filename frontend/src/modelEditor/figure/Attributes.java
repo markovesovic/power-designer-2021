@@ -17,6 +17,11 @@ public class Attributes {
 	public String getAccessModifiers() {
 		return accessModifiers;
 	}
+
+	public boolean isFunction() {
+		return function;
+	}
+
 	public void setAccessModifiers(String accessModifiers) {
 		this.accessModifiers = accessModifiers;
 	}

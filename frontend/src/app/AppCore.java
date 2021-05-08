@@ -10,7 +10,8 @@ import java.sql.DriverManager;
 import view.frames.MainFrame;
 
 public class AppCore {
-	public static final String BACKEND_URL = "";
+	public static final String BACKEND_URL = "http://localhost:3001/api/v1/";
+	public static final String PROJECT_URL = "fc6c8379-91f3-4d39-aa44-bb1928af9a89";
 
 	private static AppCore instance;
 	

@@ -38,8 +38,8 @@ public class NewEntityDialog extends JDialog{
 		labelIsAbstract = new JLabel("Is abstract:");
 		btnOk = new JButton("Ok");
 		btnOk.setAlignmentX(CENTER_ALIGNMENT);
-		rbClass = new JRadioButton("Class");
-		rbInterface = new JRadioButton("Interface");
+		rbClass = new JRadioButton("class");
+		rbInterface = new JRadioButton("interface");
 		rbClass.setSelected(true);
 
 		panelType.add(rbClass);

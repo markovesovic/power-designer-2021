@@ -60,7 +60,7 @@ module.exports.validateClassModel = async (model) => {
                   name: Joi.string().required(),
                   type: Joi.string().required(),
                   is_function: Joi.boolean().required(),
-                  is_private: Joi.boolean().required()
+                  is_private: Joi.string().valid('private', 'public', 'protected', 'default'),
 
             })).unique('name'),
 
@@ -94,12 +94,26 @@ module.exports.validateClassModel = async (model) => {
       classInterfaceNames.push(class_model.name);
       classInterfaceIDs.push(class_model.id);
       // Check if class extends itself (??)
+
+      if(class_model.from == undefined || class_model.to == undefined) {
+         invalid = true;
+         message = 'bad json form, no from or to arrays'; 
+         return;
+      }
+
       if(class_model.from.some( elem => elem.id === class_model.id) ||
          class_model.to.some( elem => elem.id === class_model.id)) {
          invalid = true;
          message = 'class id in its connections';
+         return;
       }
    });
+
+   if(invalid) {
+      console.log(message);
+      return { valid: false, message: message };
+   }
+
 
    // Check if attr types are valid
    model.class_model.forEach(class_model => {
@@ -113,7 +127,6 @@ module.exports.validateClassModel = async (model) => {
             }
       });
    });
-   console.log(classIDs);
 
    // Check if class extends more than one class and if interface extends class (??)
    model.class_model.forEach(class_model => {

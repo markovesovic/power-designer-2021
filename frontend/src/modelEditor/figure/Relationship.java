@@ -156,10 +156,10 @@ public class Relationship extends FigureGraphic{
 		
 	}
 
-	@Override
-	public String getName() {
-		return from+"-"+to;
-	}
+//	@Override
+//	public String getName() {
+//		return from+"-"+to;
+//	}
 	
 	public String getTo() {
 		return to;

@@ -17,6 +17,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.*;
 
@@ -108,55 +109,90 @@ public class ToolBox extends JPanel {
 		deleteFigure.addActionListener(new DeleteListener());
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
+
+		// Saving functionality
 		save.addActionListener(e -> {
 			try {
+
+
 				JSONArray classArray = new JSONArray();
 
 				env.getEntities().forEach(entity -> {
-					JSONObject classModel = new JSONObject();
-
-					classModel.put("id", entity.getUuid());
-					classModel.put("type", "class");
-					classModel.put("name", entity.getName());
-					classModel.put("is_abstract", false);
+					JSONObject classModel = new JSONObject()
+							.put("id", entity.getUuid())
+							.put("type", entity.getType())
+							.put("name", entity.getName())
+							.put("is_abstract", entity.isAbstract());
 
 					JSONArray attributesArray = new JSONArray();
 
 					entity.getList().forEach(attribute ->  {
-						JSONObject attributeJson = new JSONObject();
-						attributeJson.put("type", attribute.getType());
-						attributeJson.put("name", attribute.getName());
-						attributeJson.put("is_function", false);
-						attributeJson.put("is_private", attribute.getAccessModifiers());
+						JSONObject attributeJson = new JSONObject()
+									.put("type", attribute.getType())
+									.put("name", attribute.getName())
+									.put("is_function", attribute.isFunction())
+									.put("is_private", attribute.getAccessModifiers());
+
 
 						attributesArray.put(attributeJson);
 					});
 
-					classModel.put("attributes", attributesArray);
+					JSONArray from = new JSONArray();
+					JSONArray to = new JSONArray();
+					env.getRelationships().forEach(relationship -> {
+
+						if (relationship.getEntity1().getUuid() == entity.getUuid()) {
+							from.put(
+									new JSONObject()
+											.put("id", relationship.getEntity2().getUuid())
+											.put("connection_type", relationship.getName())
+							);
+						}
+						if (relationship.getEntity2().getUuid() == entity.getUuid()) {
+							to.put(
+									new JSONObject()
+											.put("id", relationship.getEntity1().getUuid())
+											.put("connection_type", relationship.getName())
+							);
+						}
+					});
+
+					classModel.put("attributes", attributesArray)
+								.put("from", from)
+								.put("to", to);
 
 					classArray.put(classModel);
 				});
 
-
-
 				JSONObject requestBody = new JSONObject()
 						.put("model_type", "class_model")
 						.put("class_model", classArray);
-				System.out.println(requestBody.toString());
+				if(env.getUuid() != null) {
+					requestBody.put("id", env.getUuid());
+					requestBody.put("version", env.getVersion());
+				}
 
-				String url = AppCore.BACKEND_URL + "projects/_project_id/models";
+				System.out.println(requestBody.toString(4));
 
+				String url = AppCore.BACKEND_URL + "projects/" + AppCore.PROJECT_URL + "/models";
 
 				HttpClient client = HttpClient.newHttpClient();
 
- 				HttpRequest request = HttpRequest.newBuilder(
-						URI.create(url))
-						.header("accept", "application/json")
+ 				HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+						.header("Content-type", "application/json")
+						.header("user_id", "2e180f00-52c8-4c49-bf25-86aab8d177cd")
+						.POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
 						.build();
 
-				HttpResponse<Object> response = client.send(request, responseInfo -> null);
+				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-				System.out.println(response.body().toString());
+				JSONObject returnJson = new JSONObject(response.body());
+				System.out.println(returnJson.toString(4));
+
+				if(returnJson.get("status").equals("ok") && env.getUuid() == null) {
+					env.setUuid(UUID.fromString(String.valueOf(returnJson.get("id"))));
+					env.setVersion(Integer.parseInt(String.valueOf(returnJson.get("version"))));
+				}
 
 			} catch (Exception e2) {
 				e2.printStackTrace();

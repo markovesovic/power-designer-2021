@@ -121,9 +121,9 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 						buildingFigure.setName(name);
 						buildingFigure.setAbstract(isAbstract);
 						if(isClass)
-							buildingFigure.setType("Class");
+							buildingFigure.setType("class");
 						else
-							buildingFigure.setType("Interface");
+							buildingFigure.setType("interface");
 						buildingFigure.init(env, e.getX(), e.getY());					
 						env.addEntity((Entity) buildingFigure);
 						env.onSelectionChanged();

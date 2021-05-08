@@ -38,7 +38,6 @@ router.post('/', projectService.checkProjectsByUser, modelValidationService.vali
 			},
 			body: JSON.stringify(req.body)
 		});
-		console.log(modelRes)
 
 		if (!req.body.id) {
 			await projectService.createModel(JSON.parse(modelRes.body).id, req.params.project_id, req.body.model_type);

@@ -17,6 +17,8 @@ import javax.swing.*;
 
 import app.AppCore;
 import classEditor.Mode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import useCaseEditor.ModeUse;
 import modelEditor.figure.Entity;
 import modelEditor.figure.Relationship;
@@ -102,15 +104,41 @@ public class ToolBoxUse extends JPanel {
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
 		newActor.addActionListener(new NewActorListener());
-		save.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					File file = window.getFile();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
+
+		// Saving use_case model
+		save.addActionListener(e -> {
+			try {
+				JSONArray useCaseArray = new JSONArray();
+
+				env.getEntities().forEach(entity -> {
+					JSONObject useCase = new JSONObject()
+							.put("id", entity.getUuid())
+							.put("type", entity.getType())
+							.put("name", entity.getName());
+
+					JSONArray from = new JSONArray();
+					JSONArray to = new JSONArray();
+					env.getRelationships().forEach(relationship -> {
+						if(relationship.getEntity1().getUuid() == entity.getUuid()) {
+							from.put(
+									new JSONObject()
+										.put("id", relationship.getEntity2().getUuid())
+										.put("link", relationship.getEntity2().getUuid())
+							);
+						}
+						if(relationship.getEntity2().getUuid() == entity.getUuid()) {
+							to.put(
+									new JSONObject()
+										.put("id", relationship.getEntity1().getUuid())
+										.put("link", relationship.getEntity1())
+							);
+						}
+					});
+
+				});
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		});
 		select(move);

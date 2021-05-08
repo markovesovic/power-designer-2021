@@ -9,6 +9,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -29,6 +30,7 @@ public class Entity extends FigureGraphic
 	private ArrayList<Attributes> list= new ArrayList<>();
 	private Mode mode;
 	private String type;
+	private final UUID uuid;
 	private boolean isAbstract;
 	
 	public Entity(Mode mode) {
@@ -44,7 +46,8 @@ public class Entity extends FigureGraphic
 		this.mode = mode;
 		setFirstPoint((int)(Math.random()*600), (int)(Math.random()*300)); //TODO get canvas dimensions
 		setSecondPoint(a.getX()+width, a.getY()+height);
-		
+
+		uuid = UUID.randomUUID();
 	}
 
 	public String getType() {
@@ -196,4 +199,8 @@ public class Entity extends FigureGraphic
         setBuilding(true);
 		
 	}
-}	
+
+	public UUID getUuid() {
+		return uuid;
+	}
+}
