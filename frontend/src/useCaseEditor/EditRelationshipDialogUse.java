@@ -23,39 +23,41 @@ import modelEditor.figure.Relationship;
 public class EditRelationshipDialogUse extends JDialog {
 
 	private JLabel lblName;
-	private JTextField tfName;
+	private JComboBox cmbName;
 	private JButton btnOK;
-	
+
 	private boolean ok;
-	
+
 	public EditRelationshipDialogUse(Relationship rel) {
 		lblName = new JLabel("Type of Relationship:");
-		tfName = new JTextField();
+		String types[]={"", "include", "extends"};
+		cmbName = new JComboBox(types);
+		cmbName.setSelectedItem(cmbName.getItemAt(0).toString());
 		btnOK = new JButton("OK");
 		ok = false;
-		
+
 		btnOK.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String val = tfName.getText();
-				
+				String val = cmbName.getSelectedItem().toString();
+
 				rel.setName(val);
 				dispose();
 			}
 		});
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
+
 		lblName.setAlignmentX(CENTER_ALIGNMENT);
-		tfName.setAlignmentX(CENTER_ALIGNMENT);
+		cmbName.setAlignmentX(CENTER_ALIGNMENT);
 		btnOK.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		panel.add(Box.createVerticalGlue());
 		panel.add(lblName);
 		panel.add(Box.createVerticalGlue());
-		panel.add(tfName);
+		panel.add(cmbName);
 		panel.add(Box.createVerticalGlue());
 		panel.add(btnOK);
 		panel.add(Box.createVerticalGlue());
