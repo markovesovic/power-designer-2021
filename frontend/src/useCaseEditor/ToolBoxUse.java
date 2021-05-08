@@ -1,4 +1,4 @@
-package classEditor;
+package useCaseEditor;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -14,16 +14,15 @@ import java.util.List;
 
 import javax.swing.*;
 
-//import org.json.JSONObject;
-
 
 import app.AppCore;
 import classEditor.Mode;
+import useCaseEditor.ModeUse;
 import modelEditor.figure.Entity;
 import modelEditor.figure.Relationship;
 
 @SuppressWarnings("serial")
-public class ToolBox extends JPanel {
+public class ToolBoxUse extends JPanel {
 	
 	public JButton select = new JButton(new ImageIcon("images/select.png"));
 	public JButton move = new JButton(new ImageIcon("images/move.png"));
@@ -31,6 +30,7 @@ public class ToolBox extends JPanel {
 	public JButton deleteFigure = new JButton(new ImageIcon("images/deleteFigure.png"));
 	public JButton newLine = new JButton(new ImageIcon("images/line.png"));
 	private JButton save = new JButton(new ImageIcon("images/save.png"));
+	private JButton newActor = new JButton(new ImageIcon("images/man.png"));
 	private JButton undo = new JButton(new ImageIcon("images/undo.png"));
 	private JButton redo = new JButton(new ImageIcon("images/redo.png"));
 	
@@ -39,9 +39,9 @@ public class ToolBox extends JPanel {
 	protected Canvas bgColor = new Canvas();
 	protected Canvas strokeColor = new Canvas();
 	
-	protected Env env;
-	protected Window window;
-	protected CanvasArea canvas;
+	protected EnvUse env;
+	protected WindowUse window;
+	protected CanvasAreaUse canvas;
 	
 	private JButton addImageButton(JButton b) {
 		Dimension d = new Dimension(36, 36);
@@ -60,7 +60,7 @@ public class ToolBox extends JPanel {
 		button.setBackground(Color.white);
 	}
 	
-	public ToolBox(Window window, Env env, CanvasArea canvas) {
+	public ToolBoxUse(WindowUse window, EnvUse env, CanvasAreaUse canvas) {
 		this.env = env;
 		this.window = window;
 		this.canvas = canvas;
@@ -87,6 +87,7 @@ public class ToolBox extends JPanel {
 		panel.add(addImageButton(newRectangle));
 		panel.add(addImageButton(newLine));
 		panel.add(addImageButton(save));
+		panel.add(addImageButton(newActor));
 		add(panel, c);
 		
 		c.gridy++;
@@ -100,6 +101,7 @@ public class ToolBox extends JPanel {
 		deleteFigure.addActionListener(new DeleteListener());
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
+		newActor.addActionListener(new NewActorListener());
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -116,17 +118,18 @@ public class ToolBox extends JPanel {
 
 	class SelectListener extends ButtonListener {
 		public SelectListener() {
-			super(Mode.SELECT);
+			super(ModeUse.SELECT);
 		}
 		public void actionPerformed(ActionEvent e) {
 			super.actionPerformed(e);
 		}
 	}
 	
+	
 	class DeleteListener extends ButtonListener {
 		
 		public DeleteListener() {
-			super(Mode.DELETE);
+			super(ModeUse.DELETE);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -136,7 +139,7 @@ public class ToolBox extends JPanel {
 	
 	class MoveListener extends ButtonListener {
 		public MoveListener() {
-			super(Mode.MOVE);
+			super(ModeUse.MOVE);
 		}
 		public void actionPerformed(ActionEvent e) {
 			super.actionPerformed(e);
@@ -144,7 +147,16 @@ public class ToolBox extends JPanel {
 	}
 	class NewRectangleListener extends ButtonListener {
 		public NewRectangleListener() {
-			super(Mode.DRAW_RECTANGLE);
+			super(ModeUse.DRAW_RECTANGLE);
+		}
+		public void actionPerformed(ActionEvent e) {
+			super.actionPerformed(e);
+		}
+	}
+	
+	class NewActorListener extends ButtonListener {
+		public NewActorListener() {
+			super(ModeUse.DRAW_ACTOR);
 		}
 		public void actionPerformed(ActionEvent e) {
 			super.actionPerformed(e);
@@ -154,7 +166,7 @@ public class ToolBox extends JPanel {
 	class NewLineListener extends ButtonListener{
 		
 		public NewLineListener() {
-			super(Mode.DRAW_LINE);
+			super(ModeUse.DRAW_LINE);
 		}		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -164,8 +176,8 @@ public class ToolBox extends JPanel {
 	}
 	
 	class ButtonListener implements ActionListener {
-		Mode mode;
-		public ButtonListener(Mode mode) {
+		ModeUse mode;
+		public ButtonListener(ModeUse mode) {
 			this.mode = mode;
 		}
 		public void actionPerformed(ActionEvent e) {
