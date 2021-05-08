@@ -7,8 +7,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +27,8 @@ import app.AppCore;
 import classEditor.Mode;
 import modelEditor.figure.Entity;
 import modelEditor.figure.Relationship;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class ToolBox extends JPanel {
@@ -100,15 +108,58 @@ public class ToolBox extends JPanel {
 		deleteFigure.addActionListener(new DeleteListener());
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
-		save.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					File file = window.getFile();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
+		save.addActionListener(e -> {
+			try {
+				JSONArray classArray = new JSONArray();
+
+				env.getEntities().forEach(entity -> {
+					JSONObject classModel = new JSONObject();
+
+					classModel.put("id", entity.getUuid());
+					classModel.put("type", "class");
+					classModel.put("name", entity.getName());
+					classModel.put("is_abstract", false);
+
+					JSONArray attributesArray = new JSONArray();
+
+					entity.getList().forEach(attribute ->  {
+						JSONObject attributeJson = new JSONObject();
+						attributeJson.put("type", attribute.getType());
+						attributeJson.put("name", attribute.getName());
+						attributeJson.put("is_function", false);
+						attributeJson.put("is_private", attribute.getAccessModifiers());
+
+						attributesArray.put(attributeJson);
+					});
+
+					classModel.put("attributes", attributesArray);
+
+					classArray.put(classModel);
+				});
+
+
+
+				JSONObject requestBody = new JSONObject()
+						.put("model_type", "class_model")
+						.put("class_model", classArray);
+				System.out.println(requestBody.toString());
+
+				String url = AppCore.BACKEND_URL + "projects/_project_id/models";
+
+
+				HttpClient client = HttpClient.newHttpClient();
+
+ 				HttpRequest request = HttpRequest.newBuilder(
+						URI.create(url))
+						.header("accept", "application/json")
+						.build();
+
+				HttpResponse<Object> response = client.send(request, responseInfo -> null);
+
+				System.out.println(response.body().toString());
+
+			} catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		});
 		select(move);

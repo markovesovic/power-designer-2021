@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import view.frames.MainFrame;
 
 public class AppCore {
+	public static final String BACKEND_URL = "";
+
 	private static AppCore instance;
 	
 	private final File metaMetaSchemaFile = new File("meta_meta_sema.json");

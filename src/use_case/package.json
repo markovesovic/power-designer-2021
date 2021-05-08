@@ -1,0 +1,33 @@
+{
+  "name": "use_case",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "web": "forever src/index.js",
+    "watch": "nodemon src/index.js"
+  },
+  "author": "jdjordjevic <jovana.djordjevic77@gmail.com>",
+  "license": "MIT",
+  "_moduleAliases": {
+    "@config": "./config",
+    "@app": "./src",
+    "@api": "./src/api",
+    "@common": "./src/common"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "forever": "^3.0.4",
+    "module-alias": "^2.2.2",
+    "mongodb": "^3.6.6",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
+  }
+}
