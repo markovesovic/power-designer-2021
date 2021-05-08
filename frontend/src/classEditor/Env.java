@@ -20,6 +20,7 @@ public class Env {
 
 	private UUID uuid;
 	private int version = 0;
+	private int maxVersion = 0;
 	
 	protected Data data = new Data();
 	
@@ -277,4 +278,6 @@ public class Env {
 	public void setVersion(int version) {
 		this.version = version;
 	}
+	public int getMaxVersion() { return maxVersion; }
+	public void setMaxVersion(int maxVersion) { this.maxVersion = maxVersion; }
 }

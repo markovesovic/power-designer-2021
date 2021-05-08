@@ -9,8 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.*;
 
@@ -113,8 +118,10 @@ public class ToolBoxUse extends JPanel {
 				env.getEntities().forEach(entity -> {
 					JSONObject useCase = new JSONObject()
 							.put("id", entity.getUuid())
-							.put("type", entity.getType())
+							.put("type", (entity.getMode().equals(Mode.DRAW_ACTOR) ?
+									"actor" : "use_case"))
 							.put("name", entity.getName());
+
 
 					JSONArray from = new JSONArray();
 					JSONArray to = new JSONArray();
@@ -123,19 +130,58 @@ public class ToolBoxUse extends JPanel {
 							from.put(
 									new JSONObject()
 										.put("id", relationship.getEntity2().getUuid())
-										.put("link", relationship.getEntity2().getUuid())
+										.put("link", relationship.getName())
 							);
 						}
 						if(relationship.getEntity2().getUuid() == entity.getUuid()) {
 							to.put(
 									new JSONObject()
 										.put("id", relationship.getEntity1().getUuid())
-										.put("link", relationship.getEntity1())
+										.put("link", relationship.getName())
 							);
 						}
 					});
-
+					useCase.put("from", from).put("to", to);
+					useCaseArray.put(useCase);
 				});
+
+				JSONObject requestBody = new JSONObject()
+						.put("model_type", "use_case")
+						.put("use_case", useCaseArray);
+
+				if(env.getUuid() != null) {
+					requestBody.put("id", env.getUuid());
+					requestBody.put("version", env.getVersion());
+				}
+				System.out.println(requestBody.toString(4));
+
+				String url = AppCore.BACKEND_URL + "projects/" + AppCore.PROJECT_URL + "/models";
+
+				HttpClient client = HttpClient.newHttpClient();
+
+				HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+						.header("Content-type", "application/json")
+						.header("user_id", AppCore.USER_ID)
+						.POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+						.build();
+
+				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+				JSONObject returnJson = new JSONObject(response.body());
+
+				System.out.println(returnJson.toString(4));
+
+				if(returnJson.get("status").equals("ok")) {
+					if(env.getUuid() == null) {
+						env.setUuid(UUID.fromString(String.valueOf(returnJson.get("id"))));
+					}
+					JOptionPane.showMessageDialog(null, "Saved");
+					env.setVersion(Integer.parseInt(String.valueOf(returnJson.get("version"))));
+				} else {
+					String message = "Operation failed with status: " + ((JSONObject)returnJson.get("error")).get("code")
+							+ "\nMessage: " + ((JSONObject)returnJson.get("error")).get("message");
+					JOptionPane.showMessageDialog(null, message);
+				}
 
 			} catch (Exception e1) {
 				e1.printStackTrace();

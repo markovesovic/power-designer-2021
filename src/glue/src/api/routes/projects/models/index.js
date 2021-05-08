@@ -54,12 +54,14 @@ router.get('/:model_id', projectService.checkProjectsByUser, async (req, res, ne
 	try {
 
 		let modelRes;
+		const model = await projectService.getModelByID(req.params.model_id);
 
-		if(req.body.model_type == 'rqm') {
+
+		if(model.model_type == 'rqm') {
 			modelRes = await got.get(`${RQM_SERVICE_URL}/rqm/${req.params.model_id}?version=${+req.query.version}`);
-		} else if(req.body.model_type == 'use_case') {
+		} else if(model.model_type == 'use_case') {
 			modelRes = await got.get(`${USE_CASE_SERVICE_URL}/use-case/${req.params.model_id}?version=${+req.query.version}`);
-		} else if(req.body.model_type == 'class_model') {
+		} else if(model.model_type == 'class_model') {
 			modelRes = await got.get(`${CLASS_MODEL_SERVICE_URL}/class-model/${req.params.model_id}?version=${+req.query.version}`);
 		}
 

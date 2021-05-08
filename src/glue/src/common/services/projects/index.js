@@ -15,6 +15,7 @@ module.exports = {
 	deleteAllModelsByProjectID,
 	createModel,
 	deleteModel,
+	getModelByID,
 
 	checkProjectsByUser,
 };
@@ -94,6 +95,13 @@ async function deleteModel (modelID) {
 	await db('models')
 		.where({ model_id: modelID })
 		.del();
+}
+
+async function getModelByID (modelID) {
+	const type = await db('models')
+							.select('*')
+							.where({ model_id: modelID });
+	return type[0];
 }
 
 async function checkProjectsByUser (req, res, next) {

@@ -34,6 +34,123 @@ const Joi = require('joi');
         }
     ]
 }
+
+{
+   "model_type":"class_model",
+   
+   "class_model":[
+      {
+         "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a1",
+         "type":"class",
+         "name":"Test1",
+         "is_abstract":false,
+         "attributes":[
+            {
+               "type":"Test1",
+               "name":"count1",
+               "is_function":false,
+               "modifier": "public"
+            }
+         ],
+         "to":[
+            
+         ],
+         "from":[
+            
+         ]
+      },
+      {
+         "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a2",
+         "type":"class",
+         "name":"Test2",
+         "is_abstract":false,
+         "attributes":[
+            {
+               "type":"int",
+               "name":"count2",
+               "is_function":false,
+               "modifier": "public"
+            }
+         ],
+         "to":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a4",
+               "connection_type":"generalization"
+            }
+         ],
+         "from":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a1",
+               "connection_type":"generalization"
+            },
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a3",
+               "connection_type":"association"
+            }
+         ]
+      },
+      {
+         "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a3",
+         "type":"interface",
+         "name":"Test3",
+         "is_abstract":false,
+         "attributes":[
+            {
+               "type":"int",
+               "name":"count2",
+               "is_function":false,
+               "modifier": "public"
+            }
+         ],
+         "to":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a2",
+               "connection_type":"generalization"
+            }
+         ],
+         "from":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a4",
+               "connection_type":"generalization"
+            },
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a4",
+               "connection_type":"generalization"
+            }
+         ]
+      },
+      {
+         "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a4",
+         "type":"interface",
+         "name":"Test4",
+         "is_abstract":false,
+         "attributes":[
+            {
+               "type":"int",
+               "name":"count2",
+               "is_function":false,
+               "modifier": "public"
+            }
+         ],
+         "to":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a2",
+               "connection_type":"generalization"
+            }
+         ],
+         "from":[
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a3",
+               "connection_type":"generalization"
+            },
+            {
+               "id":"145290ec-9d21-4cbe-a2fa-c7c110b007a3",
+               "connection_type":"generalization"
+            }
+         ]
+      }
+   ]
+}
 */
 
 module.exports.validateClassModel = async (model) => {
@@ -53,6 +170,8 @@ module.exports.validateClassModel = async (model) => {
             type: Joi.string().valid('class', 'interface').required(),
             name: Joi.string().required(),
             is_abstract: Joi.boolean().required(),
+            x_coordinate: Joi.number().optional(),
+            y_coordinate: Joi.number().optional(),
 
             attributes: Joi.array().items(
                Joi.object({
@@ -60,7 +179,7 @@ module.exports.validateClassModel = async (model) => {
                   name: Joi.string().required(),
                   type: Joi.string().required(),
                   is_function: Joi.boolean().required(),
-                  is_private: Joi.string().valid('private', 'public', 'protected', 'default'),
+                  modifier: Joi.string().valid('private', 'public', 'protected', 'default'),
 
             })).unique('name'),
 
@@ -90,6 +209,12 @@ module.exports.validateClassModel = async (model) => {
    model.class_model.forEach(class_model => {
       if(class_model.type == 'class') {
          classIDs.push(class_model.id);
+      } else {
+         if(class_model.attributes.length != 0) {
+            invalid = true;
+            message = 'interface cant have attributes';
+            return;
+         }
       }
       classInterfaceNames.push(class_model.name);
       classInterfaceIDs.push(class_model.id);

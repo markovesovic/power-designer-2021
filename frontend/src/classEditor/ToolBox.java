@@ -15,9 +15,7 @@ import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -26,6 +24,7 @@ import javax.swing.*;
 
 import app.AppCore;
 import classEditor.Mode;
+import modelEditor.figure.Attributes;
 import modelEditor.figure.Entity;
 import modelEditor.figure.Relationship;
 import org.json.JSONArray;
@@ -110,6 +109,188 @@ public class ToolBox extends JPanel {
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
 
+		redo.addActionListener(e -> {
+			try {
+				if(env.getVersion() == env.getMaxVersion()) {
+					JOptionPane.showMessageDialog(null, "Nema dalje brale");
+					return;
+				}
+
+				String url = AppCore.BACKEND_URL + "projects/" + AppCore.PROJECT_URL + "/models/" + AppCore.CLASS_MODEL_ID + "?version=" + (env.getVersion() + 1);
+				env.setVersion(env.getVersion() + 1);
+
+				HttpClient client = HttpClient.newHttpClient();
+
+				HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+						.header("Content-type", "application/json")
+						.header("user_id", AppCore.USER_ID)
+						.GET()
+						.build();
+
+
+				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+				JSONArray returnJsonArray = new JSONArray(response.body());
+				System.out.println(returnJsonArray.toString(4));
+
+				JSONObject returnJson = returnJsonArray.getJSONObject(0);
+
+				JSONArray classArray = returnJson.getJSONArray("class_model");
+
+
+
+				env.getEntities().clear();
+				env.getRelationships().clear();
+
+				Map<String, Entity> entitiesMap = new HashMap<>();
+
+				classArray.forEach(classEntity -> {
+					Entity entity = new Entity(Mode.DRAW_RECTANGLE);
+					JSONObject jsonEntity = (JSONObject) classEntity;
+
+					entitiesMap.put(jsonEntity.getString("id"), entity);
+				});
+
+				classArray.forEach(classEntity -> {
+					JSONObject jsonEntity = (JSONObject) classEntity;
+
+					String entityID = jsonEntity.getString("id");
+					Entity entity = entitiesMap.get(entityID);
+
+					int x_coordinate = jsonEntity.getInt("x_coordinate");
+					int y_coordinate = jsonEntity.getInt("y_coordinate");
+
+					String name = jsonEntity.getString("name");
+
+					JSONArray attributes = jsonEntity.getJSONArray("attributes");
+
+					attributes.forEach(jsonAttributeRaw -> {
+						JSONObject jsonAttribute = (JSONObject) jsonAttributeRaw;
+						String attrName = jsonAttribute.getString("name");
+						String modifier = jsonAttribute.getString("modifier");
+						String type = jsonAttribute.getString("type");
+						boolean function = jsonAttribute.getBoolean("is_function");
+
+						Attributes attribute = new Attributes(modifier, attrName, type, function);
+						entity.getList().add(attribute);
+					});
+
+					entity.init(env, x_coordinate, y_coordinate);
+					entity.setName(name);
+					env.addEntity(entity);
+					env.onSelectionChanged();
+
+					JSONArray from = (JSONArray) jsonEntity.get("from");
+					from.forEach(relationObjectRaw -> {
+						String id = ((JSONObject) relationObjectRaw).getString("id");
+						String connectionType = ((JSONObject) relationObjectRaw).getString("connection_type");
+						Relationship r = new Relationship();
+						r.setEntity1(entity);
+						r.setEntity2(entitiesMap.get(id));
+						r.setName(connectionType);
+						env.addRelationship(r);
+						env.onSelectionChanged();
+					});
+
+				});
+
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		});
+
+		undo.addActionListener(e -> {
+			try {
+				if(env.getVersion() == 1) {
+					JOptionPane.showMessageDialog(null, "Cant undo, this is first version");
+					return;
+				}
+				String url = AppCore.BACKEND_URL + "projects/" + AppCore.PROJECT_URL + "/models/" + AppCore.CLASS_MODEL_ID + "?version=" + (env.getVersion() - 1);
+				env.setVersion(env.getVersion() - 1);
+
+				HttpClient client = HttpClient.newHttpClient();
+
+				HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+						.header("Content-type", "application/json")
+						.header("user_id", AppCore.USER_ID)
+						.GET()
+						.build();
+
+
+				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+				JSONArray returnJsonArray = new JSONArray(response.body());
+				System.out.println(returnJsonArray.toString(4));
+
+				JSONObject returnJson = returnJsonArray.getJSONObject(0);
+
+				JSONArray classArray = returnJson.getJSONArray("class_model");
+
+
+
+				env.getEntities().clear();
+				env.getRelationships().clear();
+
+				Map<String, Entity> entitiesMap = new HashMap<>();
+
+				classArray.forEach(classEntity -> {
+					Entity entity = new Entity(Mode.DRAW_RECTANGLE);
+					JSONObject jsonEntity = (JSONObject) classEntity;
+
+					entitiesMap.put(jsonEntity.getString("id"), entity);
+				});
+
+				classArray.forEach(classEntity -> {
+					JSONObject jsonEntity = (JSONObject) classEntity;
+
+					String entityID = jsonEntity.getString("id");
+					Entity entity = entitiesMap.get(entityID);
+
+					int x_coordinate = jsonEntity.getInt("x_coordinate");
+					int y_coordinate = jsonEntity.getInt("y_coordinate");
+
+					String name = jsonEntity.getString("name");
+
+					JSONArray attributes = jsonEntity.getJSONArray("attributes");
+
+					attributes.forEach(jsonAttributeRaw -> {
+						JSONObject jsonAttribute = (JSONObject) jsonAttributeRaw;
+						String attrName = jsonAttribute.getString("name");
+						String modifier = jsonAttribute.getString("modifier");
+						String type = jsonAttribute.getString("type");
+						boolean function = jsonAttribute.getBoolean("is_function");
+
+						Attributes attribute = new Attributes(modifier, attrName, type, function);
+						entity.getList().add(attribute);
+					});
+
+					entity.init(env, x_coordinate, y_coordinate);
+					entity.setName(name);
+					env.addEntity(entity);
+					env.onSelectionChanged();
+
+					JSONArray from = (JSONArray) jsonEntity.get("from");
+					from.forEach(relationObjectRaw -> {
+						String id = ((JSONObject) relationObjectRaw).getString("id");
+						String connectionType = ((JSONObject) relationObjectRaw).getString("connection_type");
+						Relationship r = new Relationship();
+						r.setEntity1(entity);
+						r.setEntity2(entitiesMap.get(id));
+						r.setName(connectionType);
+						env.addRelationship(r);
+						env.onSelectionChanged();
+					});
+
+				});
+
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+
 		// Saving functionality
 		save.addActionListener(e -> {
 			try {
@@ -122,7 +303,13 @@ public class ToolBox extends JPanel {
 							.put("id", entity.getUuid())
 							.put("type", entity.getType())
 							.put("name", entity.getName())
-							.put("is_abstract", entity.isAbstract());
+							.put("is_abstract", entity.isAbstract())
+							.put("x_coordinate",
+											(entity.getA().getX() +
+											 entity.getB().getX()) / 2)
+							.put("y_coordinate",
+											(entity.getA().getY() +
+											 entity.getB().getY()) / 2);
 
 					JSONArray attributesArray = new JSONArray();
 
@@ -131,7 +318,7 @@ public class ToolBox extends JPanel {
 									.put("type", attribute.getType())
 									.put("name", attribute.getName())
 									.put("is_function", attribute.isFunction())
-									.put("is_private", attribute.getAccessModifiers());
+									.put("modifier", attribute.getAccessModifiers());
 
 
 						attributesArray.put(attributeJson);
@@ -167,6 +354,7 @@ public class ToolBox extends JPanel {
 				JSONObject requestBody = new JSONObject()
 						.put("model_type", "class_model")
 						.put("class_model", classArray);
+
 				if(env.getUuid() != null) {
 					requestBody.put("id", env.getUuid());
 					requestBody.put("version", env.getVersion());
@@ -180,7 +368,7 @@ public class ToolBox extends JPanel {
 
  				HttpRequest request = HttpRequest.newBuilder(URI.create(url))
 						.header("Content-type", "application/json")
-						.header("user_id", "2e180f00-52c8-4c49-bf25-86aab8d177cd")
+						.header("user_id", AppCore.USER_ID)
 						.POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
 						.build();
 
@@ -189,10 +377,21 @@ public class ToolBox extends JPanel {
 				JSONObject returnJson = new JSONObject(response.body());
 				System.out.println(returnJson.toString(4));
 
-				if(returnJson.get("status").equals("ok") && env.getUuid() == null) {
-					env.setUuid(UUID.fromString(String.valueOf(returnJson.get("id"))));
+				if(returnJson.get("status").equals("ok") ) {
+					if(env.getUuid() == null) {
+						env.setUuid(UUID.fromString(String.valueOf(returnJson.get("id"))));
+					}
+					JOptionPane.showMessageDialog(null, "Saved!");
+					AppCore.CLASS_MODEL_ID = String.valueOf(returnJson.get("id"));
+
 					env.setVersion(Integer.parseInt(String.valueOf(returnJson.get("version"))));
+					env.setMaxVersion(Integer.parseInt(String.valueOf(returnJson.get("version"))));
+				} else {
+					String message = "Operation failed with status: " + ((JSONObject)returnJson.get("error")).get("code")
+							+ "\nMessage: " + ((JSONObject)returnJson.get("error")).get("message");
+					JOptionPane.showMessageDialog(null, message);
 				}
+
 
 			} catch (Exception e2) {
 				e2.printStackTrace();
