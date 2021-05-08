@@ -112,7 +112,7 @@ public class CanvasMouseListener implements MouseListener, MouseMotionListener {
 				break;
 			if(buildingFigure==null) {
 				try {
-					String name = new NewEntityDialogUse().getName();
+					String name = new NewEntityDialog().getName();
 					if(name != null) {
 						buildingFigure = new Entity(Mode.DRAW_RECTANGLE);
 						buildingFigure.setName(name);

@@ -9,6 +9,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -28,6 +29,8 @@ public class Entity extends FigureGraphic
 	private int height;
 	private ArrayList<Attributes> list= new ArrayList<>();
 	private Mode mode;
+
+	private final UUID uuid;
 	
 	public Entity(Mode mode) {
 		super("Entetitet"+(++nbOfRectangles), Color.black, new Color(200, 200, 250));
@@ -42,6 +45,8 @@ public class Entity extends FigureGraphic
 		this.mode = mode;
 		setFirstPoint((int)(Math.random()*600), (int)(Math.random()*300)); //TODO get canvas dimensions
 		setSecondPoint(a.getX()+width, a.getY()+height);
+
+		this.uuid = UUID.randomUUID();
 		
 	}
 
@@ -181,5 +186,9 @@ public class Entity extends FigureGraphic
         setSelected(true);
         setBuilding(true);
 		
+	}
+
+	public UUID getUuid() {
+		return uuid;
 	}
 }	
