@@ -19,11 +19,11 @@ router.post('/rqm/to/use-case', async (req, res, next) => {
 
 router.post('/class-model/to/java', async (req, res, next) => {
 	try {
-		const classModelToJava = await transformerService.classModelToJava(req.body);
+		const classModelToJava = await transformerService.classModelToJava(req.body.class_model);
 
 		res.status(200)
 			.json(Response.success({
-				generated_code: classModelToJava
+				files: classModelToJava
 			}))
 			.end();
 	} catch (err) {
