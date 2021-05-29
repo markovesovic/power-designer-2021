@@ -1,7 +1,7 @@
 {
   "name": "auth",
   "version": "1.0.0",
-  "description": "Auth service is a microservice whose role is to to ensure who the user is authenticated and authorization.",
+  "description": "Auth service is a microservice whose role is to ensure who the user is authenticated and authorization.",
   "main": "index.js",
   "scripts": {
     "web": "forever src/index.js",
