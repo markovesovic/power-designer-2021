@@ -8,11 +8,48 @@ const { projectService,
 
 const { RQM_SERVICE_URL,
 	 	  USE_CASE_SERVICE_URL,
-	  	  CLASS_MODEL_SERVICE_URL } = require('../../../../../config');
+	  	  CLASS_MODEL_SERVICE_URL,
+		  GENERATOR_SERVICE_URL } = require('../../../../../config');
 
 /**
  * Models
  */
+
+router.post('/generate/code', projectService.checkProjectsByUser, modelValidationService.validateModel, async (req, res, next) => {
+	try {
+		const resp = await got.post(`${GENERATOR_SERVICE_URL}class-model/to/java`, {
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify(req.body)
+		});
+
+		res.status(200)
+			.end(resp.body);
+
+	} catch (err) {
+		console.log(err);
+		next(err);
+	}
+});
+
+router.post('/generate/use-case', projectService.checkProjectsByUser, modelValidationService.validateModel, async (req, res, next) => {
+	try {
+		const resp = await got.post(`${GENERATOR_SERVICE_URL}rqm/to/use-case`, {
+			headers: {
+				'content-type': 'application/json',
+			},
+			body: JSON.stringify(req.body)
+		});
+		res.status(200)
+			.end(resp.body);
+
+	} catch (err) {
+		console.log(err);
+		next(err);
+	}
+});
+
 router.post('/', projectService.checkProjectsByUser, modelValidationService.validateModel, async (req, res, next) => {
 	try {
 		let modelService;

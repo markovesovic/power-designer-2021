@@ -7,15 +7,15 @@ import java.awt.event.WindowEvent;
 
 public class CollaborationStage extends JFrame {
 
-    private CanvasArea canvas1;
-    private CanvasArea canvas2;
-    private CanvasArea canvas3;
-    private JButton btn1;
-    private JButton btn2;
-    private JButton btn3;
+    private final CanvasArea canvas1;
+    private final CanvasArea canvas2;
+    private final CanvasArea canvas3;
+    private final JButton btn1;
+    private final JButton btn2;
+    private final JButton btn3;
 
-    public CollaborationStage (Env env)
-    {
+
+    public CollaborationStage(Env env, Env envMerged, Env envPulled) {
         setBounds(0, 0, 2000, 600);
         setMinimumSize(new Dimension(400, 300));
         setLocationRelativeTo(null);
@@ -29,16 +29,18 @@ public class CollaborationStage extends JFrame {
         });
 
         canvas1 = new CanvasArea(env);
-        canvas2 = new CanvasArea(env);
-        canvas3 = new CanvasArea(env);
-        btn1 = new JButton("Choose");
-        btn2 = new JButton("Choose");
-        btn3 = new JButton("Choose");
+
+        canvas2 = new CanvasArea(envMerged);
+
+        canvas3 = new CanvasArea(envPulled);
+
+        btn1 = new JButton("Choose yours");
+        btn2 = new JButton("Choose merged");
+        btn3 = new JButton("Choose pulled");
 
         Container pane = getContentPane();
         pane.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-
 
 
         constraints.insets = new Insets(2, 2, 2, 2);
@@ -67,13 +69,33 @@ public class CollaborationStage extends JFrame {
 
 
         add(btn1);
-
-       add(btn2);
-
+        add(btn2);
         add(btn3);
 
         btn1.addActionListener(e -> {
+            dispose();
+            JOptionPane.showMessageDialog(null, "Model is successfully chosen");
+        });
 
+        btn2.addActionListener(e -> {
+            env.getEntities().clear();
+            env.getRelationships().clear();
+
+            envMerged.getEntities().forEach(entity -> env.getEntities().add(entity));
+            envMerged.getRelationships().forEach(relationship -> env.getRelationships().add(relationship));
+
+            dispose();
+            JOptionPane.showMessageDialog(null, "Models successfully merged!");
+        });
+
+        btn3.addActionListener(e -> {
+            env.getEntities().clear();
+            env.getRelationships().clear();
+
+            envPulled.getEntities().forEach(entity -> env.getEntities().add(entity));
+            envPulled.getRelationships().forEach(relationship -> env.getRelationships().add(relationship));
+            dispose();
+            JOptionPane.showMessageDialog(null, "Successfully pulled model");
         });
 
         setVisible(true);

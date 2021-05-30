@@ -209,13 +209,16 @@ module.exports.validateClassModel = async (model) => {
 	model.class_model.forEach(class_model => {
 		if(class_model.type == 'class') {
 			classIDs.push(class_model.id);
-		} else {
-			if(class_model.attributes.length != 0) {
+		} else if(class_model.attributes.length != 0 && class_model.type == 'interface') {
 				invalid = true;
 				message = 'interface cant have attributes';
-				return;
-			}
+            return;
 		}
+      if(class_model.name.includes(' ')) {
+         invalid = true;
+         message = 'class name must not contain space';
+         return;
+      }
 		classInterfaceNames.push(class_model.name);
 		classInterfaceIDs.push(class_model.id);
 		// Check if class extends itself (??)
@@ -250,6 +253,10 @@ module.exports.validateClassModel = async (model) => {
 				message = 'param of undefined type';
 				invalid = true;
 			}
+         if(attribute.name.includes(' ')) {
+            invalid = true;
+            message = 'property type cannot must not contain space';
+         }
 		});
 	});
 

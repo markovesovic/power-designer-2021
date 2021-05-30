@@ -14,11 +14,17 @@ public class Window extends JFrame {
 	public SelectionPanel selectionPanel;
 	
 	private Env env;
+	private Env envMerged;
+	private Env envPulled;
 	private File file;
 	
 	public Window(String filePath) {
-		Env.CreateInstance(this); 
+		Env.CreateInstance(this);
+		Env.CreateInstanceMerged(this);
+		Env.CreateInstancePulled(this);
 		env = Env.getInstance();
+		envMerged = Env.getInstanceMerged();
+		envPulled = Env.getInstancePulled();
 		file = new File(filePath);
 		
 		setBounds(0, 0, 800, 600);
@@ -45,6 +51,24 @@ public class Window extends JFrame {
 		env.setSelectionPanel(selectionPanel);
 		env.setCanvas(canvas);
 		env.setCanvasMouseListener(cml);
+
+		CanvasArea canvasMerged = new CanvasArea(env);
+		ToolBox toolboxMerged = new ToolBox(this, env, canvas);
+		SelectionPanel selectionPanelMerged = new SelectionPanel(this, env);
+		CanvasMouseListener cmlMerged = new CanvasMouseListener(canvas, env);
+		envMerged.setToolbox(toolboxMerged);
+		envMerged.setSelectionPanel(selectionPanelMerged);
+		envMerged.setCanvas(canvasMerged);
+		envMerged.setCanvasMouseListener(cmlMerged);
+
+		CanvasArea canvasPulled = new CanvasArea(env);
+		ToolBox toolboxPulled = new ToolBox(this, env, canvas);
+		SelectionPanel selectionPanelPulled = new SelectionPanel(this, env);
+		CanvasMouseListener cmlPulled = new CanvasMouseListener(canvas, env);
+		envPulled.setToolbox(toolboxPulled);
+		envPulled.setSelectionPanel(selectionPanelPulled);
+		envPulled.setCanvas(canvasPulled);
+		envPulled.setCanvasMouseListener(cmlPulled);
 		
 		canvas.addMouseListener(cml);
 		canvas.addMouseMotionListener(cml);

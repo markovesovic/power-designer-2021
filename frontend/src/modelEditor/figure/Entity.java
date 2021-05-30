@@ -30,7 +30,7 @@ public class Entity extends FigureGraphic
 	private ArrayList<Attributes> list= new ArrayList<>();
 	private Mode mode;
 	private String type;
-	private final UUID uuid;
+	private UUID uuid;
 	private boolean isAbstract;
 	
 	public Entity(Mode mode) {
@@ -57,9 +57,15 @@ public class Entity extends FigureGraphic
 	public void setType(String type) {
 		this.type = type;
 	}
+	public void setUUID(String uuid) {
+		this.uuid = UUID.fromString(uuid);
+	}
 
 	public boolean isAbstract() {
 		return isAbstract;
+	}
+	public void setAbstract(boolean isAbstract) {
+		this.isAbstract = isAbstract;
 	}
 
 	public void init(Env env, int x, int y) {
