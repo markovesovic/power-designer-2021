@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const parser = require('@common/parser');
 
@@ -7,8 +8,32 @@ module.exports = {
 	classModelToJava
 };
 
-function rqmToUseCase (rqm) {
-	// TO-DO: Implement rqmToUseCase
+function rqmToUseCase (useCases) {
+	const result = [];
+
+	rqmToUseCaseRecursive(useCases, result);
+
+	return { use_case: result };
+}
+
+function rqmToUseCaseRecursive (useCases, result) {
+	if (!useCases || useCases.length <= 0) {
+		return;
+	}
+
+	for (const useCase of useCases) {
+		if (useCase.type === 'funcional') {
+			result.push({
+				id: uuidv4(),
+				name: useCase.title,
+				type: 'use_case',
+				from: [],
+				to: []
+			});
+		}
+
+		rqmToUseCaseRecursive(useCase.subRequests);
+	}
 }
 
 function classModelToJava (classModel) {

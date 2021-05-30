@@ -3,13 +3,13 @@ const router = require('express').Router({ mergeParams: true });
 const Response = require('@api/utils/response');
 const { transformerService } = require('@common/services');
 
-router.post('/rqm/to/use-case', async (req, res, next) => {
+router.post('/rqm/to/use-case', (req, res, next) => {
 	try {
-		const rqmToUseCase = await transformerService.rqmToUseCase(req.body);
+		const rqmToUseCase = transformerService.rqmToUseCase(req.body.subRequests);
 
 		res.status(200)
 			.json(Response.success({
-				generated_code: rqmToUseCase
+				cases: rqmToUseCase
 			}))
 			.end();
 	} catch (err) {
@@ -17,9 +17,9 @@ router.post('/rqm/to/use-case', async (req, res, next) => {
 	}
 });
 
-router.post('/class-model/to/java', async (req, res, next) => {
+router.post('/class-model/to/java', (req, res, next) => {
 	try {
-		const classModelToJava = await transformerService.classModelToJava(req.body.class_model);
+		const classModelToJava = transformerService.classModelToJava(req.body.class_model);
 
 		res.status(200)
 			.json(Response.success({
