@@ -41,6 +41,8 @@ public class ToolBox extends JPanel {
 	private JButton save = new JButton(new ImageIcon("images/save.png"));
 	private JButton undo = new JButton(new ImageIcon("images/undo.png"));
 	private JButton redo = new JButton(new ImageIcon("images/redo.png"));
+	private JButton merge = new JButton(new ImageIcon("images/merge.png"));
+	private JButton transformation = new JButton(new ImageIcon("images/transformation.png"));
 	
 	protected List<JButton> buttons = new ArrayList<JButton>();
 
@@ -95,6 +97,8 @@ public class ToolBox extends JPanel {
 		panel.add(addImageButton(newRectangle));
 		panel.add(addImageButton(newLine));
 		panel.add(addImageButton(save));
+		panel.add(addImageButton(merge));
+		panel.add(addImageButton(transformation));
 		add(panel, c);
 		
 		c.gridy++;
@@ -108,6 +112,14 @@ public class ToolBox extends JPanel {
 		deleteFigure.addActionListener(new DeleteListener());
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
+
+		merge.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CollaborationStage colStage = new CollaborationStage(env);
+
+			}
+		});
 
 		redo.addActionListener(e -> {
 			try {

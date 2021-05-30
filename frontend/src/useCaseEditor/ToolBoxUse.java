@@ -40,6 +40,7 @@ public class ToolBoxUse extends JPanel {
 	private JButton newActor = new JButton(new ImageIcon("images/man.png"));
 	private JButton undo = new JButton(new ImageIcon("images/undo.png"));
 	private JButton redo = new JButton(new ImageIcon("images/redo.png"));
+	private JButton transformation = new JButton(new ImageIcon("images/transformation.png"));
 	
 	protected List<JButton> buttons = new ArrayList<JButton>();
 
@@ -95,6 +96,7 @@ public class ToolBoxUse extends JPanel {
 		panel.add(addImageButton(newLine));
 		panel.add(addImageButton(save));
 		panel.add(addImageButton(newActor));
+		panel.add(addImageButton(transformation));
 		add(panel, c);
 		
 		c.gridy++;
