@@ -66,7 +66,7 @@ function classModelToJava (classModel) {
 		}
 
 		for (const extendsClass of extendsClasses) {
-			generatedCode += extendsClass.name;
+			generatedCode += extendsClass.name + ' ';
 		}
 
 		if (implementsClasses.length > 0) {
@@ -74,7 +74,7 @@ function classModelToJava (classModel) {
 		}
 
 		for (const implementsClass of implementsClasses) {
-			generatedCode += implementsClass.name;
+			generatedCode += implementsClass.name + ' ';
 		}
 
 		generatedCode += ' {\n';

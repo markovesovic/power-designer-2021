@@ -36,6 +36,8 @@ public class Env {
 	protected Color stroke = Color.BLACK;
 	
 	private static Env instance;
+	private static Env instanceMerged;
+	private static Env instancePulled;
 
 	protected static class Data  {
 		List<Entity> entities = new ArrayList<Entity>();
@@ -49,9 +51,21 @@ public class Env {
 	public static void CreateInstance(Window window) {
 		instance = new Env(window);
 	}
+	public static void CreateInstanceMerged(Window window) {
+		instanceMerged = new Env(window);
+	}
+	public static void CreateInstancePulled(Window window) {
+		instancePulled = new Env(window);
+	}
 	
 	public static Env getInstance() {
 		return instance;
+	}
+	public static Env getInstanceMerged() {
+		return instanceMerged;
+	}
+	public static Env getInstancePulled() {
+		return instancePulled;
 	}
 
 	public CanvasMouseListener getCanvasMouseListener() {

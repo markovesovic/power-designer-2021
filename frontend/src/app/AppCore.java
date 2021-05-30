@@ -10,11 +10,14 @@ import java.sql.DriverManager;
 import view.frames.MainFrame;
 
 public class AppCore {
-	public static final String BACKEND_URL = "http://localhost:5000/api/v1/";
+	public static final String BACKEND_URL = "http://localhost:3001/api/v1/";
 	public static final String PROJECT_URL = "fc6c8379-91f3-4d39-aa44-bb1928af9a89";
 	public static final String USER_ID = "2e180f00-52c8-4c49-bf25-86aab8d177cd";
 	public static String CLASS_MODEL_ID = "";
 	public static String USE_CASE_MODEL_ID = "";
+
+	public static boolean MERGE_REQUIRED = false;
+	public static boolean PULL_REQUIRED = true;
 
 	private static AppCore instance;
 	
