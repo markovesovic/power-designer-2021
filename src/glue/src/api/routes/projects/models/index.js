@@ -15,7 +15,6 @@ const { RQM_SERVICE_URL,
  */
 router.post('/', projectService.checkProjectsByUser, modelValidationService.validateModel, async (req, res, next) => {
 	try {
-
 		let modelService;
 		let modelServiceRoute;
 
@@ -46,6 +45,7 @@ router.post('/', projectService.checkProjectsByUser, modelValidationService.vali
 		res.status(200)
 			.end(modelRes.body);
 	} catch (err) {
+		console.error(err);
 		next(err);
 	}
 });

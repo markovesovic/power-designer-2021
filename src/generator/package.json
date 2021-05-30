@@ -1,12 +1,11 @@
 {
-  "name": "auth",
+  "name": "generator",
   "version": "1.0.0",
-  "description": "Auth service is a microservice whose role is to ensure who the user is authenticated and authorization.",
+  "description": "Is a microservice whose role is to generate Usecase from RQM and Java code from Class model.",
   "main": "index.js",
   "scripts": {
     "web": "forever src/index.js",
-    "watch": "nodemon src/index.js",
-    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js && knex seed:run --knexfile ./config/knexfile.js"
+    "watch": "nodemon src/index.js"
   },
   "author": "Riphal <bjankovic998@gmail.com>",
   "license": "MIT",
@@ -21,20 +20,12 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
-    "dataman": "^0.0.9",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-validator": "^6.10.0",
     "forever": "^3.0.4",
-    "got": "^11.8.2",
-    "knex": "^0.95.3",
     "module-alias": "^2.2.2",
-    "mysql": "^2.18.1",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
   }
