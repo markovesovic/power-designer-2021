@@ -16,6 +16,9 @@ public class AppCore {
 	public static String CLASS_MODEL_ID = "";
 	public static String USE_CASE_MODEL_ID = "";
 
+	public static boolean MERGE_REQUIRED = false;
+	public static boolean PULL_REQUIRED = true;
+
 	private static AppCore instance;
 	
 	private final File metaMetaSchemaFile = new File("meta_meta_sema.json");

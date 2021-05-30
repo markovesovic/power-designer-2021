@@ -113,12 +113,12 @@ public class ToolBox extends JPanel {
 		newRectangle.addActionListener(new NewRectangleListener());
 		newLine.addActionListener(new NewLineListener());
 
-		merge.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CollaborationStage colStage = new CollaborationStage(env);
+		merge.addActionListener(e -> {
 
-			}
+			String url = AppCore.BACKEND_URL + "projects/" + AppCore.PROJECT_URL + "/models/" + AppCore.CLASS_MODEL_ID;
+
+			CollaborationStage colStage = new CollaborationStage(env);
+
 		});
 
 		redo.addActionListener(e -> {
@@ -305,6 +305,12 @@ public class ToolBox extends JPanel {
 
 		// Saving functionality
 		save.addActionListener(e -> {
+
+			if(AppCore.PULL_REQUIRED) {
+				JOptionPane.showMessageDialog(null, "You have to pull first");
+				return;
+			}
+
 			try {
 
 

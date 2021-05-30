@@ -72,6 +72,10 @@ public class CollaborationStage extends JFrame {
 
         add(btn3);
 
+        btn1.addActionListener(e -> {
+
+        });
+
         setVisible(true);
     }
 
